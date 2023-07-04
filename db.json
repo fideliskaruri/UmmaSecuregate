@@ -1,0 +1,193 @@
+{
+  "incidents": [
+    {
+      "firstname": "fidelis",
+      "lastname": "karuri",
+      "admissionNumber": "afaf",
+      "incidentDescription": "ghjkl;'hjkl;",
+      "title": "fghjkl;ghjkl",
+      "id": "6876ac36-d199-4eed-99c8-efbd3060b122",
+      "date": "Sunday, June 18, 2023 at 6:14 PM",
+      "completed": false,
+      "brands":[
+        {"name":"corolla", "color":"green"}
+      ]
+    }
+  ],
+  "history": [
+    {
+      "firstname": "sdfaf",
+      "lastname": "sdfa",
+      "admissionNumber": "fasdf",
+      "incidentDescription": "fsdfa",
+      "title": "asfdaf",
+      "id": "4f243e26-c2c2-4649-8b31-e79dcd65d097",
+      "completed": true
+    },
+    {
+      "firstname": "AFASF",
+      "lastname": "SDFAF",
+      "admissionNumber": "SASDFASDF",
+      "incidentDescription": "ASDFA",
+      "title": "ASDFA",
+      "id": "ed784218-7cc0-4dfe-bd72-28bc06b839cb",
+      "completed": true
+    },
+    {
+      "firstname": "SDFGHJKL",
+      "lastname": "SDFGHJK",
+      "admissionNumber": "DFGHJK",
+      "incidentDescription": "DFGHJKL",
+      "title": "DFGHJK",
+      "id": "c90ea58a-f59c-4873-91b9-504833b02695",
+      "completed": true
+    },
+    {
+      "firstname": "ghjkl",
+      "lastname": "fghjk",
+      "admissionNumber": "fghjkl",
+      "incidentDescription": "rthjkl",
+      "title": "ghjkl",
+      "id": "c967e339-039b-421e-98de-8ea1c9b94cb3",
+      "completed": true
+    },
+    {
+      "firstname": "afdaf",
+      "lastname": "fasfda",
+      "admissionNumber": "assdfq",
+      "incidentDescription": "sdfaf",
+      "title": "sfaf",
+      "id": "0eaf87d2-ec1b-4ce2-8845-470684f4cbcc",
+      "completed": true
+    },
+    {
+      "firstname": "ADF",
+      "lastname": "ASFF",
+      "admissionNumber": "SAFAF",
+      "incidentDescription": "DFA",
+      "title": "ASFD",
+      "id": "f5c11149-ea87-411c-b6e7-9f65487c6a72",
+      "completed": true
+    },
+    {
+      "firstname": "fasdfa",
+      "lastname": "asdfaf",
+      "admissionNumber": "asdfa",
+      "incidentDescription": "sdfa",
+      "title": "asdfa",
+      "id": "d48dbd5b-4255-47df-8cd2-7de0b9a27f0d",
+      "completed": true
+    },
+    {
+      "firstname": "fafaf",
+      "lastname": "adf",
+      "admissionNumber": "asfd",
+      "incidentDescription": "asd",
+      "title": "asdf",
+      "id": "716e6f74-0ab7-4f58-9eae-977f864d0e30",
+      "completed": true
+    },
+    {
+      "firstname": "fafaf",
+      "lastname": "asdfa",
+      "admissionNumber": "asdfaf",
+      "incidentDescription": "asdfaf`\n",
+      "title": "asdfa",
+      "id": "8e2f649e-76b9-42a5-b8c8-cca4681fd546",
+      "completed": true
+    },
+    {
+      "firstname": "fasdfa",
+      "lastname": "asdf",
+      "admissionNumber": "asfda",
+      "incidentDescription": "asdfa",
+      "title": "asdfda",
+      "id": "0372e11a-b110-4e0b-a47f-97339eace014",
+      "completed": true
+    },
+    {
+      "firstname": "dfafd",
+      "lastname": "fdsdfa",
+      "admissionNumber": "adf",
+      "incidentDescription": "sdfa",
+      "title": "dsfa",
+      "id": "eb901b9a-c19c-4bb0-a311-aa9488e46c7e",
+      "completed": true
+    },
+    {
+      "firstname": "adfa",
+      "lastname": "dfda",
+      "admissionNumber": "dsdaf",
+      "incidentDescription": "sddf",
+      "title": "sadfa",
+      "id": "a1e3d6a6-e6eb-4d9f-91e2-2160d131bfbd",
+      "completed": true
+    },
+    {
+      "firstname": "xdfghj",
+      "lastname": "zxghjkl",
+      "admissionNumber": "vbnm,.",
+      "incidentDescription": "cvbnmk,l.",
+      "title": "vbnm,.",
+      "id": "9b856d73-9d6b-4da3-ba02-6fbfef444fc6",
+      "completed": true
+    },
+    {
+      "firstname": "fasfaf",
+      "lastname": "asdfa",
+      "admissionNumber": "sdfasdf",
+      "incidentDescription": "fasdf",
+      "title": "asddfa",
+      "id": "aa1d54a3-9541-4117-92da-3bf55c131fae",
+      "completed": true
+    },
+    {
+      "firstname": "dfaf",
+      "lastname": "fasf",
+      "admissionNumber": "asdf",
+      "incidentDescription": "afda",
+      "title": "asf",
+      "id": "68c9e44e-3762-4a97-a6c1-27453e16fe25",
+      "completed": true
+    },
+    {
+      "firstname": "afdaf",
+      "lastname": "faf",
+      "admissionNumber": "afdaf",
+      "incidentDescription": "sddfa",
+      "title": "fasdf",
+      "id": "5f769f6b-6d17-405e-aa13-fe9c3e5dbb6f",
+      "completed": true
+    },
+    {
+      "firstname": "ghjk",
+      "lastname": "hjk",
+      "admissionNumber": "jkl",
+      "incidentDescription": "jkl",
+      "title": "jkl",
+      "id": "42b35fb0-b048-49ee-a35b-679273441b0e",
+      "date": "Sunday, June 18, 2023 at 5:06 PM",
+      "completed": true
+    },
+    {
+      "firstname": "Fidelis",
+      "lastname": "karuri",
+      "admissionNumber": "bsit ",
+      "incidentDescription": "Description:\nOn June 18, 2023, at approximately 10:30 PM, a security incident was detected at our headquarters. The incident involved unauthorized access to our internal network. It appears that an external attacker exploited a vulnerability in our firewall system, gaining access to sensitive data.\n\nImmediate Actions Taken:\nUpon detection of the incident, the incident response team was immediately activated. The affected systems were isolated from the network to prevent further unauthorized access. Forensic analysis was initiated to determine the extent of the breach and identify potential data compromises.\n\nImpact Assessment:\nPreliminary investigation suggests that customer data, including personal information and account details, may have been compromised. We are in the process of assessing the extent of the data breach and identifying the individuals affected.\n\nMitigation Measures:\nTo mitigate the impact of the incident, all user passwords have been reset, and additional security measures have been implemented. This includes improving firewall configurations, implementing multi-factor authentication, and enhancing network monitoring capabilities.\n\nFurther Investigation:\nThe incident response team will continue the investigation to identify the attacker's motives, gather evidence, and strengthen our security infrastructure to prevent similar incidents in the future. Law enforcement agencies and relevant authorities have been notified as per our legal obligations.\n\nConclusion:\nWe take this incident seriously and understand the importance of safeguarding our customers' data. We apologize for any inconvenience caused and assure you that we are working diligently to mitigate the impact and prevent future incidents. Regular updates will be provided as the investigation progresses.",
+      "title": "yeah",
+      "id": "18b632c3-b673-4af5-bdb4-e7dac02feaf0",
+      "date": "Sunday, June 18, 2023 at 5:07 PM",
+      "completed": true
+    },
+    {
+      "firstname": "ghjkl",
+      "lastname": "hjkl",
+      "admissionNumber": "hjkl",
+      "incidentDescription": "jDescription: On June 18, 2023, at approximately 10:30 PM, a security incident was detected at our headquarters. The incident involved unauthorized access to our internal network. It appears that an external attacker exploited a vulnerability in our firewall system, gaining access to sensitive data. Immediate Actions Taken: Upon detection of the incident, the incident response team was immediately activated. The affected systems were isolated from the network to prevent further unauthorized access. Forensic analysis was initiated to determine the extent of the breach and identify potential data compromises. Impact Assessment: Preliminary investigation suggests that customer data, including personal information and account details, may have been compromised. We are in the process of assessing the extent of the data breach and identifying the individuals affected. Mitigation Measures: To mitigate the impact of the incident, all user passwords have been reset, and additional security measures have been implemented. This includes improving firewall configurations, implementing multi-factor authentication, and enhancing network monitoring capabilities. Further Investigation: The incident response team will continue the investigation to identify the attacker's motives, gather evidence, and strengthen our security infrastructure to prevent similar incidents in the future. Law enforcement agencies and relevant authorities have been notified as per our legal obligations. Conclusion: We take this incident seriously and understand the importance of safeguarding our customers' data. We apologize for any inconvenience caused and assure you that we are working diligently to mitigate the impact and prevent future incidents. Regular updates will be provided as the investigation progresses.",
+      "title": "jkl",
+      "id": "bd1a8787-504a-4829-9d8f-22301d76541e",
+      "date": "Sunday, June 18, 2023 at 5:19 PM",
+      "completed": true
+    }
+  ]
+}
