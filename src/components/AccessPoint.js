@@ -25,29 +25,58 @@ const AccessPoint = ({ accesspoint }) => {
       <li
         className={
           show
-            ? `list-group-item w-50 text-capitalize active`
-            : `list-group-item w-50 text-capitalize`
+            ? `list-group-item w-100 text-capitalize bg-dark text-white `
+            : `list-group-item w-100 text-capitalize bg-dark text-white `
         }
         onClick={() => setShow(!show)}
       >
-        {accesspoint.accessPointName}
-        {/* <Button
-          text={"show"}
-          color={"outline-primary "}
-          onClick={() => setShow(!show)}
-        /> */}
+        <div className="d-flex align-items-center">
+          <div
+            className="rounded"
+            style={{
+              height: "10px",
+              width: "10px",
+              backgroundColor: `${
+                accesspoint.checkedGender
+                  ? show
+                    ? "lightgreen"
+                    : "lightblue"
+                  : show
+                  ? "#fdff38"
+                  : "white"
+              }
+            
+              `,
+              marginRight: "5px",
+            }}
+          />
+          {accesspoint.accessPointName}
+        </div>
       </li>
-      {show &&
-        guardList.map((guard) =>
-          accesspoint.selectedGuards.map(
-            (selected) =>
-              selected === guard.id && (
-                <li className="list-group-item w-50" key={guard.id}>
-                  {guard.firstname} {guard.lastname}
-                </li>
-              )
-          )
-        )}
+
+      <div className="d-flex">
+        {show &&
+          guardList.map((guard) =>
+            accesspoint.selectedGuards.map(
+              (selected) =>
+                selected === guard.id && (
+                  <li
+                    className="list-group-item w-50 "
+                    style={
+                      guard.gender === "Female"
+                        ? {
+                            backgroundColor: "#f6b092",
+                          }
+                        : { backgroundColor: "#f0f8ff" }
+                    }
+                    key={guard.id}
+                  >
+                    {guard.firstname} {guard.lastname}
+                  </li>
+                )
+            )
+          )}
+      </div>
     </>
   );
 };

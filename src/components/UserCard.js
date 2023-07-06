@@ -1,5 +1,4 @@
-const UserCard = ({ guard, IMGURL }) => {
-  console.log(guard);
+const UserCard = ({ guard }) => {
   return (
     <div
       className=" text-bg-dark mb-3 d-flex rounded-pill align-items-center "
@@ -8,7 +7,7 @@ const UserCard = ({ guard, IMGURL }) => {
       <img
         className="card-img-top rounded-circle "
         src={`${guard.imageURL}`}
-        alt="Card image cap"
+        alt=""
         style={{
           maxHeight: "100px",
           minHeight: "100px",

@@ -16,6 +16,8 @@ import {
   collection,
   updateDoc,
   addDoc,
+  deleteDoc,
+  getDoc,
 } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Navigate } from "react-router-dom";
@@ -27,6 +29,7 @@ export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState();
   const [emailInUse, setEmailInUse] = useState(false);
   const [noSuchUser, setNoSuchUser] = useState(false);
+  const [admin, setAdmin] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -47,6 +50,27 @@ export const AuthContextProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
+  //check if the current user is an admin
+  const checkAdmin = async () => {
+    console.log("checking");
+    const docRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log("user exists")
+      if (docSnap.data().admin === true) {
+        console.log("this user is an admin");
+        return true;
+      } else {
+        console.log("user is not an admin");
+        return false;
+      }
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+      return false;
+    }
+  };
   //function to save the failed or succefull access log to the firestore db
   const saveAccessLog = async (email, success, type) => {
     const accessLogRef = collection(db, "accessLogs");
@@ -86,7 +110,7 @@ export const AuthContextProvider = ({ children }) => {
     file
   ) => {
     const customId = crypto.randomUUID(); // Set your custom ID here
-    const incidentRef = doc(db, "users", customId);
+    const usersRef = doc(db, "users", customId);
 
     const querySnapshot = await getDocs(collection(db, "users"));
     const emailExists = querySnapshot.docs.some(
@@ -114,7 +138,7 @@ export const AuthContextProvider = ({ children }) => {
       ? await getDownloadURL(ref(storageRef))
       : console.log("Please select a file");
 
-    await setDoc(incidentRef, {
+    await setDoc(usersRef, {
       firstname,
       lastname,
       role,
@@ -139,8 +163,13 @@ export const AuthContextProvider = ({ children }) => {
     } catch (error) {
       let firstname = null;
       let lastname = null;
+      let id;
       let customId = null;
       let imageURL = null;
+      let role = null;
+      let admin = null;
+      let gender = null;
+      let assigned = null;
       const querySnapshot = await getDocs(collection(db, "users"));
       const emailExists = querySnapshot.docs.some((doc) => {
         const docInfo = doc.data();
@@ -149,7 +178,10 @@ export const AuthContextProvider = ({ children }) => {
           lastname = docInfo.lastname;
           customId = docInfo.id;
           imageURL = docInfo.imageURL;
-
+          gender = docInfo.gender;
+          admin = docInfo.admin;
+          assigned = docInfo.assigned;
+          role = docInfo.role;
           return true;
         } else {
           return false;
@@ -168,6 +200,22 @@ export const AuthContextProvider = ({ children }) => {
           displayName: `${firstname} ${lastname}`,
           photoURL: imageURL,
         });
+
+        const currentUserId = currentUser.uid;
+        await setDoc(doc(db, "users", currentUserId), {
+          firstname,
+          lastname,
+          role,
+          gender,
+          email,
+          imageURL,
+          date: getFormattedDate(),
+          admin,
+          id: currentUserId,
+          assigned,
+        });
+
+        await deleteDoc(doc(db, "users", customId));
       } else {
         setNoSuchUser(true);
       }
@@ -184,6 +232,7 @@ export const AuthContextProvider = ({ children }) => {
     setNoSuchUser,
     date: getFormattedDate(),
     saveAccessLog,
+    checkAdmin,
   };
 
   return (

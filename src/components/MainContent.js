@@ -21,10 +21,11 @@ import { UserAuth } from "../context/AuthContext";
 import AccessPointList from "./AccessPointList";
 
 const MainContent = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
   const [signedIn, setSignedIn] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const { user } = UserAuth();
+  const { user, checkAdmin } = UserAuth();
 
   useEffect(() => {
     // Check if the user is authenticated
@@ -34,6 +35,7 @@ const MainContent = () => {
         const currentUser = await user;
         // Set the signedIn state based on the user status
         if (currentUser) {
+          checkAdmin().then((result) => setIsAdmin(result));
           setSignedIn(true);
         } else {
           setSignedIn(false);
@@ -73,7 +75,13 @@ const MainContent = () => {
             />
             <Route
               path="usermanagement/admin"
-              element={signedIn && <Admin />}
+              element={
+                signedIn && isAdmin ? (
+                  <Admin />
+                ) : (
+                  <Navigate to="/usermanagement" />
+                )
+              }
             />
 
             <Route path="/History" element={signedIn && <History />} />

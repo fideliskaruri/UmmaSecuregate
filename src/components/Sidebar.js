@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   CiSquareQuestion,
   CiCircleList,
@@ -16,9 +16,15 @@ import { UserAuth } from "../context/AuthContext";
 
 const Sidebar = () => {
   const auth = getAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
-  const { saveAccessLog,user } = UserAuth();
+  const { saveAccessLog, user } = UserAuth();
 
+  const { checkAdmin } = UserAuth();
+
+  useEffect(() => {
+    checkAdmin().then((result) => setIsAdmin(result));
+  });
   const logOut = () => {
     signOut(auth)
       .then(() => {
@@ -58,6 +64,7 @@ const Sidebar = () => {
       path: "/accesslogs",
       label: "Access Logs",
       icon: CiFileOn,
+      showIfAdmin: true,
     },
     {
       path: "/history",
@@ -90,18 +97,22 @@ const Sidebar = () => {
             />
           </Link>
         </li>
-        {links.map((link, index) => (
-          <li key={index}>
-            <Link to={link.path} className="sidebar-link">
-              {React.createElement(link.icon, {
-                style: {
-                  backgroundColor: "transparent",
-                },
-              })}
-              <span className="link-text">{link.label}</span>
-            </Link>
-          </li>
-        ))}
+        {links.map((link, index) => {
+          if (link.showIfAdmin && !isAdmin) return null;
+          return (
+            <li key={index}>
+              <Link to={link.path} className="sidebar-link">
+                {React.createElement(link.icon, {
+                  style: {
+                    backgroundColor: "transparent",
+                  },
+                })}
+                <span className="link-text">{link.label}</span>
+              </Link>
+            </li>
+          );
+        })}
+
         <li>
           <Button text={"Logout"} color={"outline-light"} onClick={logOut} />
         </li>

@@ -17,24 +17,17 @@ const UserManagement = ({ guard }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const collectionRef = collection(db, "users");
   const navigate = useNavigate();
-  const data = [];
-  const { user } = UserAuth();
+  const { checkAdmin } = UserAuth();
 
   const refreshData = async () => {
     onSnapshot(collectionRef, (snapshot) => {
       const newData = snapshot.docs.map((doc) => doc.data());
       setUserList(newData);
-      // console.log(newData);
     });
   };
 
   useEffect(() => {
-    if (user) {
-      console.log(user.uid);
-      if (user.uid === "x57S7DJhQTTigk5JPMQVsVNedQz1") {
-        setIsAdmin(true);
-      }
-    }
+    checkAdmin().then((result) => setIsAdmin(result));
     refreshData();
   }, []);
 
