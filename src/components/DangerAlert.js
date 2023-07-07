@@ -1,12 +1,12 @@
-const DangerAlert = ({ onClick, text }) => {
+const DangerAlert = ({ onClick, text, color }) => {
   return (
     <div
-      className="d-flex alert alert-danger alert-dismissible fade show w-75 p-2"
-      
+      className={`d-flex alert alert-${color} alert-dismissible fade show w-50 m-0 align-items-center p-2 `}
       role="alert"
+      onClick={onClick}
+      style={{ cursor: "pointer", fontSize:'11px' }}
     >
       {text}
-      <button type="button" className="btn-close pb-2 btn-sm" onClick={onClick}></button>
     </div>
   );
 };

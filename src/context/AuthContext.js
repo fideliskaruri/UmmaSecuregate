@@ -138,6 +138,7 @@ export const AuthContextProvider = ({ children }) => {
       ? await getDownloadURL(ref(storageRef))
       : console.log("Please select a file");
 
+    
     await setDoc(usersRef, {
       firstname,
       lastname,
@@ -147,7 +148,7 @@ export const AuthContextProvider = ({ children }) => {
       password,
       imageURL,
       date: getFormattedDate(),
-      admin: false,
+      admin: role === "Admin",
       id: customId,
       assigned: false,
     });

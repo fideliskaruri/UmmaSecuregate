@@ -1,8 +1,8 @@
 const UserCard = ({ guard }) => {
   return (
     <div
-      className=" text-bg-dark mb-3 d-flex rounded-pill align-items-center "
-      // style={{ width: "250px", minHeight: "150px",maxHeight:"250px" }}
+      className=" text-bg-dark mb-3 d-flex rounded-pill align-items-center userCard "
+      style={{  maxHeight: "150px", maxWidth:'300px' }}
     >
       <img
         className="card-img-top rounded-circle "
@@ -12,6 +12,7 @@ const UserCard = ({ guard }) => {
           maxHeight: "100px",
           minHeight: "100px",
           maxWidth: "100px",
+          marginRight:'10px'
         }}
       />
       <div className="card-body mt-2  ">
