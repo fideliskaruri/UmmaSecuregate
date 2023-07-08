@@ -25,12 +25,12 @@ const AccessPoint = ({ accesspoint }) => {
       <li
         className={
           show
-            ? `list-group-item w-100 text-capitalize bg-dark text-white `
-            : `list-group-item w-100 text-capitalize bg-dark text-white `
+            ? `list-group-item w-100 text-capitalize bg-dark text-white d-flex justify-content-between`
+            : `list-group-item w-100 text-capitalize bg-dark text-white d-flex justify-content-between`
         }
         onClick={() => setShow(!show)}
       >
-        <div className="d-flex align-items-center">
+        <div className="d-flex align-items-center ">
           <div
             className="rounded"
             style={{
@@ -52,6 +52,7 @@ const AccessPoint = ({ accesspoint }) => {
           />
           {accesspoint.accessPointName}
         </div>
+        <div>delete</div>
       </li>
 
       <div className="d-flex">

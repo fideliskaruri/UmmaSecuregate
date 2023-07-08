@@ -9,11 +9,7 @@
     
 }
 
-/* .container{
-  display: grid;
-  grid-template-columns: 1fr;
-  margin: 0px;
-} */
+
 .sidebar {
     display: grid;
     grid-template-rows: repeat(auto-fit, minmax(0, 1fr));
@@ -57,7 +53,27 @@
     grid-gap: 10px;
     padding:0px 10px 0px 0px;
     background-color: transparent;
+    overflow-y: auto ;
 }
+.mainContainer::-webkit-scrollbar {
+  width: 0px;
+}
+@media (max-width: 800px) {
+  .mainContainer {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-gap: 10px;
+      padding: 0px 10px 0px 0px;
+      background-color: transparent;
+      width: 500px;
+    overflow-y: auto;
+
+    }
+    .accessPointList{
+      width: 500px;
+    }
+}
+
 
 .listarea {
   max-height: 500px;
@@ -78,11 +94,11 @@
 .maincontent {
     padding: 30px 10px 0px 0px;
     height: 100%;
-    min-width: 1000px;
-    max-width: 100vw;
-    
+    overflow-y: auto;
 }
-
+.maincontent ::-webkit-scrollbar{
+  width: 0px;
+}
 .usersListArea{
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -91,23 +107,24 @@
   max-height: 85vh;
 
 }
-@media (max-width: 1115px) {
+@media (max-width: 1020px) {
   .usersListArea {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns:  1fr 1fr;
     grid-gap: 5px;
     overflow-y: auto;
     max-height: 85vh;
 
   }
-}@media (max-width: 890px) {
+}@media (max-width: 800px) {
   .usersListArea {
     display: grid;
+    justify-content: center;
     grid-template-columns: 1fr;
     grid-gap: 5px;
     overflow-y: auto;
     max-height: 85vh;
-
+    max-width: 360px;
   }
 }
 p{
@@ -209,10 +226,22 @@ label{
   }
 }
 
-.accessPointList{
-  max-height: 90vh;
-  overflow-y: auto;
-}
-.accessPointList::-webkit-scrollbar{
+.none{
+  position: absolute;
   width: 0px;
+  height: 0px;
+}
+
+.alertPopup{
+  animation: 1 pop 0.5s forwards ;
+}
+
+@keyframes pop {
+  from{
+    top: -150px;
+  }
+  to{
+    top: 10px;
+  }
+  
 }

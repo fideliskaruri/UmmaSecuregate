@@ -5,6 +5,7 @@
   text-decoration: none;
   font-size: 14px;
   font-family: monospace;
+  color: white;
 }
 
 body, html{
@@ -15,10 +16,10 @@ body, html{
 .App{
   height: 100vh;
   width: 100vw;
-  min-width: 500px;
+  min-width: 720px;
   max-height: 100vh;
   min-height: 100vh;
-  background-color: #202123;
+  background-color: #343541;
   overflow:auto ;
 }
 .App::-webkit-scrollbar{

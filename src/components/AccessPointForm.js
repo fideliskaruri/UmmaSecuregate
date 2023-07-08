@@ -4,9 +4,12 @@ import { useEffect, useState } from "react";
 import DangerAlert from "./DangerAlert";
 
 const AccessPointForm = () => {
-  const [alert, setAlert] = useState(false);
+  //Danger Alert States
+  const [show, setShow] = useState(false);
+
+  //others
   const [accessPointName, setAccessPointName] = useState("");
-  const [checkedGender, setCheckedGender] = useState(false);
+  const [checkedGender, setCheckedGender] = useState(true);
   const [selectedGuards, setSelectedGuards] = useState([]);
 
   const addAccessPoint = async (e) => {
@@ -15,7 +18,7 @@ const AccessPointForm = () => {
     const accessPointsCollectionRef = doc(db, "accessPoints", customId);
 
     if (!accessPointName) {
-      setAlert(true);
+      setShow(true);
     } else {
       try {
         await setDoc(accessPointsCollectionRef, {
@@ -35,15 +38,24 @@ const AccessPointForm = () => {
 
   return (
     <>
-      {alert && (
+      {show && (
         <DangerAlert
           text={"Please fill in access point name!"}
-          onClick={() => setAlert(false)}
+          color={"danger"}
+          onClick={() => setShow(false)}
         />
       )}
 
-      <form className="w-75 mb-3" onSubmit={addAccessPoint}>
-        <div className="input-group">
+      <form className="w-100 m-0" onSubmit={addAccessPoint}>
+        <label
+          className="text-warning"
+          htmlFor="checkbox"
+          style={{ fontSize: "12px" }}
+        >
+          Uncheck the box only if the Access Point can have any gender assigned
+          to it.
+        </label>
+        <div className="input-group mb-3">
           <input
             type="text"
             className="form-control rounded-left"
@@ -51,25 +63,23 @@ const AccessPointForm = () => {
             value={accessPointName}
             onChange={(e) => setAccessPointName(e.target.value)}
           />
-
           <input
-            className="btn btn-outline-primary rounded-right"
+            className="form-check-input p-0 m-0"
+            type="checkbox"
+            value="oppositeGender"
+            name="checkbox"
+            checked={checkedGender}
+            onChange={(e) => setCheckedGender(e.target.checked)}
+            style={{ height: "40px", width: "20px" }}
+          />
+        </div>
+
+        <div className="input-group">
+          <input
+            className="btnbtn-outline-primary form-control"
             type="submit"
             value="Save"
           />
-        </div>
-        <div className="form-check">
-          <input
-            className="form-check-input"
-            type="checkbox"
-            value="oppositeGender"
-            checked={checkedGender}
-            onChange={(e) => setCheckedGender(e.target.checked)}
-            style={{ height: "20px", width: "20px" }}
-          />
-          <label className="form-check-label" htmlFor="flexCheckChecked">
-            Opposite Gender
-          </label>
         </div>
       </form>
     </>

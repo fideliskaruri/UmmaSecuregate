@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const UnassignedGuards = ({ guards }) => {
-  const [show, setShow] = useState(false);
+  const [showMale, setShowMale] = useState(false);
   const [showFemale, setShowFemale] = useState(false);
 
   return (
@@ -9,7 +9,7 @@ const UnassignedGuards = ({ guards }) => {
       <ul className="list-group">
         <li
           className="list-group-item bg-dark text-white"
-          onClick={() => setShow(!show)}
+          onClick={() => setShowMale(!showMale)}
         >
           <div className="d-flex align-items-center">
             <div
@@ -17,14 +17,14 @@ const UnassignedGuards = ({ guards }) => {
               style={{
                 height: "10px",
                 width: "10px",
-                backgroundColor: `${show ? "lightgreen" : "lightblue"}`,
+                backgroundColor: `${showMale ? "lightgreen" : "lightblue"}`,
                 marginRight: "5px",
               }}
             />
             Male Guards
           </div>
         </li>
-        {show &&
+        {showMale &&
           guards.map(
             (guard) =>
               guard.gender === "Male" && (

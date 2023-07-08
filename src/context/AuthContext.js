@@ -25,10 +25,14 @@ import { Navigate } from "react-router-dom";
 const UserContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
+  //Danger Alert States
+  const [alertText, setAlertText] = useState("");
+  const [alertColor, setAlertColor] = useState("");
+  const [show, setShow] = useState(true);
+
   const [signedIn, setSignedIn] = useState(true);
   const [user, setUser] = useState();
   const [emailInUse, setEmailInUse] = useState(false);
-  const [noSuchUser, setNoSuchUser] = useState(false);
   const [admin, setAdmin] = useState(false);
 
   useEffect(() => {
@@ -52,23 +56,27 @@ export const AuthContextProvider = ({ children }) => {
 
   //check if the current user is an admin
   const checkAdmin = async () => {
-    console.log("checking");
-    const docRef = doc(db, "users", user.uid);
-    const docSnap = await getDoc(docRef);
+    if (user) {
+      console.log("checking");
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      console.log("user exists")
-      if (docSnap.data().admin === true) {
-        console.log("this user is an admin");
-        return true;
+      if (docSnap.exists()) {
+        console.log("user exists");
+        if (docSnap.data().admin === true) {
+          console.log("this user is an admin");
+          return true;
+        } else {
+          console.log("user is not an admin");
+          return false;
+        }
       } else {
-        console.log("user is not an admin");
+        // docSnap.data() will be undefined in this case
+        console.log("No such document!");
         return false;
       }
     } else {
-      // docSnap.data() will be undefined in this case
-      console.log("No such document!");
-      return false;
+      return;
     }
   };
   //function to save the failed or succefull access log to the firestore db
@@ -138,7 +146,6 @@ export const AuthContextProvider = ({ children }) => {
       ? await getDownloadURL(ref(storageRef))
       : console.log("Please select a file");
 
-    
     await setDoc(usersRef, {
       firstname,
       lastname,
@@ -218,7 +225,9 @@ export const AuthContextProvider = ({ children }) => {
 
         await deleteDoc(doc(db, "users", customId));
       } else {
-        setNoSuchUser(true);
+        setShow(true);
+        setAlertColor("danger");
+        setAlertText("Inavlid email or password");
       }
     }
   };
@@ -229,11 +238,13 @@ export const AuthContextProvider = ({ children }) => {
     createUser,
     emailInUse,
     setEmailInUse,
-    noSuchUser,
-    setNoSuchUser,
     date: getFormattedDate(),
     saveAccessLog,
     checkAdmin,
+    setShow,
+    show,
+    alertColor,
+    alertText,
   };
 
   return (

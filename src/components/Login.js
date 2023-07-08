@@ -8,7 +8,7 @@ const Login = ({ setAuthState }) => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const { signInUser, setNoSuchUser, noSuchUser } = UserAuth();
+  const { signInUser, setShow, show, alertColor, alertText } = UserAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,10 +32,11 @@ const Login = ({ setAuthState }) => {
         </h1>
 
         <div className="form-group w-25">
-          {noSuchUser && (
+          {show && (
             <DangerAlert
-              text={"Invalid email or password"}
-              onClick={() => setNoSuchUser(false)}
+              onClick={() => setShow(false)}
+              color={alertColor}
+              text={alertText}
             />
           )}
           <label htmlFor="exampleInputEmail1">Email address</label>

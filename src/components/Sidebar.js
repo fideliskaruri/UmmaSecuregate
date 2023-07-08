@@ -14,12 +14,11 @@ import Button from "./Button";
 import { getAuth, signOut } from "firebase/auth";
 import { UserAuth } from "../context/AuthContext";
 
-const Sidebar = () => {
+const Sidebar = ({ showSidebar }) => {
   const auth = getAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
   const { saveAccessLog, user } = UserAuth();
-
   const { checkAdmin } = UserAuth();
 
   useEffect(() => {
@@ -84,40 +83,43 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="grid-container">
-      <ul className="sidebar text-bg-dark">
-        <li>
-          <Link to="/dashboard" className="sidebar-link">
-            <Logo
-              style={{
-                backgroundColor: "transparent",
-                width: "100px",
-                height: "40px",
-              }}
-            />
-          </Link>
-        </li>
-        {links.map((link, index) => {
-          if (link.showIfAdmin && !isAdmin) return null;
-          return (
-            <li key={index}>
-              <Link to={link.path} className="sidebar-link">
-                {React.createElement(link.icon, {
-                  style: {
-                    backgroundColor: "transparent",
-                  },
-                })}
-                <span className="link-text">{link.label}</span>
-              </Link>
-            </li>
-          );
-        })}
+    <>
+    
+      <div className={"grid-container"}>
+        <ul className="sidebar text-bg-dark">
+          <li>
+            <Link to="/dashboard" className="sidebar-link">
+              <Logo
+                style={{
+                  backgroundColor: "transparent",
+                  width: "100px",
+                  height: "40px",
+                }}
+              />
+            </Link>
+          </li>
+          {links.map((link, index) => {
+            if (link.showIfAdmin && !isAdmin) return null;
+            return (
+              <li key={index}>
+                <Link to={link.path} className="sidebar-link">
+                  {React.createElement(link.icon, {
+                    style: {
+                      backgroundColor: "transparent",
+                    },
+                  })}
+                  <span className="link-text">{link.label}</span>
+                </Link>
+              </li>
+            );
+          })}
 
-        <li>
-          <Button text={"Logout"} color={"outline-light"} onClick={logOut} />
-        </li>
-      </ul>
-    </div>
+          <li>
+            <Button text={"Logout"} color={"outline-light"} onClick={logOut} />
+          </li>
+        </ul>
+      </div>
+    </>
   );
 };
 

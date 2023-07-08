@@ -58,9 +58,10 @@ const AccessPointList = () => {
 
   useEffect(() => {
     checkAdmin().then((result) => setIsAdmin(result));
-
     refreshData();
-  }, []);
+    const timeoutId = setTimeout(() => setShow(false), 4000);
+    return () => clearTimeout(timeoutId);
+  }, [show]);
 
   //generate random index from array size
   const generateRadomIndex = (n) => {
@@ -71,23 +72,21 @@ const AccessPointList = () => {
   //shuffle guards
   const shuffleGuards = async () => {
     //male guards
-    const male = [];
-    guards.map((guard) => guard.gender === "Male" && male.push(guard));
+    const male = guards.filter((guard) => guard.gender === "Male");
     //female guards
-    const female = [];
-    guards.map((guard) => guard.gender === "Female" && female.push(guard));
+    const female = guards.filter((guard) => guard.gender === "Female");
     //unassigned Guards
     let unassignedGuards = [];
     let assignedGuards = [];
 
-    guards.map((guard) => {
+    guards.forEach((guard) => {
       unassignedGuards.push(!guard.assigned && guard.id);
     });
 
     if (unassignedGuards.length > 0) {
-      for (var accessPoint in accessPointList) {
-        console.log(accessPointList[accessPoint].selectedGuards);
-        if (accessPointList[accessPoint].selectedGuards.length === 2) {
+      for (const accessPoint of accessPointList) {
+        console.log(accessPoint.selectedGuards);
+        if (accessPoint.selectedGuards.length === 2) {
           setShow(true);
           setAlertColor("danger");
           setAlertText("Access Point Full");
@@ -95,11 +94,15 @@ const AccessPointList = () => {
           setShow(true);
           setAlertColor("success");
           setAlertText("Assigning Guards To Posts");
-          const currentAccessPoint = accessPointList[accessPoint].id;
+          const {
+            id: currentAccessPoint,
+            checkedGender,
+            accessPointName,
+          } = accessPoint;
           const maleIndex = generateRadomIndex(male);
           const femaleIndex = generateRadomIndex(female);
 
-          if (accessPointList[accessPoint].checkedGender) {
+          if (checkedGender) {
             console.log("checking");
             if (male.length > 0) {
               if (female.length > 0) {
@@ -108,8 +111,7 @@ const AccessPointList = () => {
                 console.log("assigning");
 
                 //add assigned guards to the assigned guards array
-                assignedGuards.push(maleG.id);
-                assignedGuards.push(femaleG.id);
+                assignedGuards.push(maleG.id, femaleG.id);
 
                 //remove assigned guards from array
                 male.splice(maleIndex, 1);
@@ -118,10 +120,8 @@ const AccessPointList = () => {
                 console.log(female);
 
                 // remove assigned guards from unassignedGuards array
-                unassignedGuards = unassignedGuards.filter(
-                  // eslint-disable-next-line no-loop-func
-                  (guard) => !assignedGuards.includes(guard)
-                );
+                unassignedGuards.splice(maleIndex, 1);
+                unassignedGuards.splice(femaleIndex, 1);
 
                 for (let j = 0; j <= 1; j++) {
                   console.log("updating database");
@@ -135,7 +135,7 @@ const AccessPointList = () => {
                 setShow(true);
                 setAlertColor("danger");
                 setAlertText(
-                  `Insuficient number of female guards to continue assignment, stopped at ${accessPointList[accessPoint].accessPointName}`
+                  `Insuficient number of female guards to continue assignment, stopped at ${accessPointName}`
                 );
                 return;
               }
@@ -143,11 +143,11 @@ const AccessPointList = () => {
               setShow(true);
               setAlertColor("danger");
               setAlertText(
-                `Insuficient number of male guards to continue assignment, stopped at ${accessPointList[accessPoint].accessPointName}`
+                `Insuficient number of male guards to continue assignment, stopped at ${accessPointName}`
               );
               return;
             }
-          } else if (!accessPointList[accessPoint].checkedGender) {
+          } else if (!checkedGender) {
             for (let i = 0; i < 2; i++) {
               if (unassignedGuards.length !== 0) {
                 let randIndex = generateRadomIndex(unassignedGuards);
@@ -160,12 +160,13 @@ const AccessPointList = () => {
                 });
 
                 assignedGuards.push(currentGuard);
+                // remove assigned guards from unassignedGuards array
                 unassignedGuards.splice(randIndex, 1);
               } else {
                 setShow(true);
                 setAlertColor("danger");
                 setAlertText(
-                  `Could not finish assigning guards for ${accessPointList[accessPoint].accessPointName}. Please Add more guards`
+                  `Could not finish assigning guards for ${accessPointName}. Please Add more guards`
                 );
               }
             }
@@ -179,6 +180,7 @@ const AccessPointList = () => {
         }
       }
     } else {
+      // if( ){}
       setShow(true);
       setAlertText("Every Guard has been Assigned");
       setAlertColor("warning");
@@ -186,42 +188,17 @@ const AccessPointList = () => {
     }
   };
 
-  // //shuffle all the guards regardless of assignment
-  // const shuffleAllGuards = async () => {
-  //   console.log("started");
-  //   let unassignedGuards = [];
-  //   let assignedGuards = [];
-  //   allguards.map((guard) => {
-  //     unassignedGuards.push(guard.id);
-  //   });
+  //shuffle all the guards regardless of assignment
+  const shuffleAllGuards = async () => {
+    await unassignAllGuards();
+    await shuffleGuards();
+  };
 
-  //   await unassignAllGuards();
-  //   for (var accessPoint in accessPointList) {
-  //     const currentAccessPoint = accessPointList[accessPoint].id;
-  //     console.log(accessPoint);
-  //     for (var i = 0; i < 2; i++) {
-  //       let len = unassignedGuards.length;
-  //       let randIndex = Math.floor(Math.random() * len);
-  //       let currentGuard = unassignedGuards[randIndex];
-
-  //       console.log("guards:", currentGuard);
-  //       //update the state of the assigned boolean to true
-  //       await updateDoc(doc(db, "users", currentGuard), {
-  //         assigned: true,
-  //       });
-
-  //       assignedGuards.push(currentGuard);
-  //       unassignedGuards.splice(randIndex, 1);
-  //     }
-  //     console.log("Currently assigned guards:", assignedGuards);
-  //     await updateDoc(doc(db, "accessPoints", currentAccessPoint), {
-  //       selectedGuards: assignedGuards,
-  //     });
-  //     assignedGuards = [];
-  //   }
-  // };
   //unassign all guards
   const unassignAllGuards = async () => {
+    setShow(true);
+    setAlertColor("warning");
+    setAlertText("Unassigning Guards from all Posts!");
     for (var i = 0; i < allguards.length; i++) {
       const currentGuard = allguards[i].id;
 
@@ -245,6 +222,16 @@ const AccessPointList = () => {
   };
   return (
     <div className="accessPointList">
+      {show && (
+        <>
+          <DangerAlert
+            text={alertText}
+            color={alertColor}
+            onClick={() => setShow(false)}
+            width="50"
+          />
+        </>
+      )}
       {isAdmin && (
         <div
           className="d-flex input-group justify-content-start w-100 "
@@ -260,30 +247,20 @@ const AccessPointList = () => {
             onClick={shuffleGuards}
             color={guards.length === 0 ? `danger` : `outline-light`}
           />
-          {/* <Button
+          <Button
             text={"Shuffle All Guards"}
             onClick={shuffleAllGuards} // shuffles all the guards whether or not they're assigned
             color={"outline-light"}
-          /> */}
+          />
           <Button
             text={"Unassign All Guards"}
             onClick={unassignAllGuards}
             color={guards.length === 0 ? "danger" : "outline-light"}
           />
-          {show && (
-            <>
-              <DangerAlert
-                text={alertText}
-                color={alertColor}
-                onClick={() => setShow(false)}
-              />
-              {setTimeout(() => setShow(false), 10000)}
-            </>
-          )}
         </div>
       )}
 
-      <div className="mainContainer" style={{ cursor: "pointer" }}>
+      <div className="mainContainer " style={{ cursor: "pointer" }}>
         <div>
           <h2 className="text-light mb-0">Access Points</h2>
 
