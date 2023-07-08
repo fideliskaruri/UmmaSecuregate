@@ -1,36 +1,51 @@
-import React from "react";
+import { useEffect } from "react";
+import Button from "./Button";
 
-const ModalComponent = () => {
+const ModalComponent = ({ text, Accept, Decline }) => {
+
+  useEffect(() => {
+    const preventTab = (e) => {
+      if (e.keyCode === 9) {
+        e.preventDefault();
+      }
+    };
+    document.addEventListener("keydown", preventTab);
+    return () => {
+      document.removeEventListener("keydown", preventTab);
+    };
+  }, []);
+
   return (
-    <div class="modal" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>Modal body text goes here.</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary">
-              Save changes
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Close
-            </button>
-          </div>
+    <div
+      className="rounded modal "
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 9999,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)", // add a translucent background
+      }}
+    >
+      <div
+        className="rounded text-bg-dark"
+        style={{
+          width: "300px",
+          height: "100px", // add a white background for the content
+          padding: "10px", // add some padding for the content
+          display: "flex",
+          flexDirection: "column", // make the content vertical
+          alignItems: "center", // center the content horizontally
+          justifyContent: "space-between", // space out the content vertically
+        }}
+      >
+        <h2>{text}</h2>
+        <div>
+          <Button text={"Yes"} color={"danger"} onClick={Accept} />
+          <Button text={"No"} color={"outline-primary"} onClick={Decline} />
         </div>
       </div>
     </div>

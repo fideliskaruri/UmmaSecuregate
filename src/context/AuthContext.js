@@ -57,22 +57,16 @@ export const AuthContextProvider = ({ children }) => {
   //check if the current user is an admin
   const checkAdmin = async () => {
     if (user) {
-      console.log("checking");
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        console.log("user exists");
         if (docSnap.data().admin === true) {
-          console.log("this user is an admin");
           return true;
         } else {
-          console.log("user is not an admin");
           return false;
         }
       } else {
-        // docSnap.data() will be undefined in this case
-        console.log("No such document!");
         return false;
       }
     } else {

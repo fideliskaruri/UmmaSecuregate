@@ -245,3 +245,15 @@ label{
   }
   
 }
+
+.modal-open {
+  pointer-events: none;
+  outline: none;
+  /* Add this style */
+}
+
+.modal-open .modal {
+  pointer-events: auto;
+  /* Add this style */
+  visibility: visible;
+}

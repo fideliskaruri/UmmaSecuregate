@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
 import AccessPointForm from "./AccessPointForm";
 import Button from "./Button";
-import { collection, onSnapshot, updateDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  updateDoc,
+  doc,
+  deleteDoc,
+  getDoc,
+} from "firebase/firestore";
 import AccessPoint from "./AccessPoint";
 import { db } from "../firebaseConfig";
 import { UserAuth } from "../context/AuthContext";
 import DangerAlert from "./DangerAlert";
 import UnassignedGuards from "./UnassignedGuards";
+import ModalComponent from "./ModalComponent";
 
 const AccessPointList = () => {
   //admin state
@@ -18,7 +26,11 @@ const AccessPointList = () => {
   //Danger Alert States
   const [alertText, setAlertText] = useState("");
   const [alertColor, setAlertColor] = useState("");
-  const [show, setShow] = useState(true);
+  const [showAlert, setShowAlert] = useState(true);
+
+  //modal states
+  const [showModal, setShowModal] = useState(false);
+  const [modalReturn, setModalReturn] = useState(null);
 
   //guards state
   const [guards, setGuards] = useState([]); //set guards fetched from the database
@@ -35,6 +47,7 @@ const AccessPointList = () => {
     onSnapshot(accessPointCollectionRef, (snapshot) => {
       const newData = snapshot.docs.map((docu) => docu.data());
       setAccessPointList(newData);
+      accessPointList.sort(sortByCheckedGender);
     });
 
     onSnapshot(usersCollectionRef, (snapshot) => {
@@ -47,6 +60,7 @@ const AccessPointList = () => {
       );
       setGuards(newData);
     });
+
     onSnapshot(usersCollectionRef, (snapshot) => {
       const newData = [];
       snapshot.docs.map(
@@ -59,9 +73,9 @@ const AccessPointList = () => {
   useEffect(() => {
     checkAdmin().then((result) => setIsAdmin(result));
     refreshData();
-    const timeoutId = setTimeout(() => setShow(false), 4000);
+    const timeoutId = setTimeout(() => setShowAlert(false), 5000);
     return () => clearTimeout(timeoutId);
-  }, [show]);
+  }, []);
 
   //generate random index from array size
   const generateRadomIndex = (n) => {
@@ -80,18 +94,23 @@ const AccessPointList = () => {
     let assignedGuards = [];
 
     guards.forEach((guard) => {
-      unassignedGuards.push(!guard.assigned && guard.id);
+      if (!guard.assigned) {
+        unassignedGuards.push(guard.id);
+      }
     });
 
     if (unassignedGuards.length > 0) {
+      // sort the access points by checkedGender
+      accessPointList.sort(sortByCheckedGender);
+
       for (const accessPoint of accessPointList) {
         console.log(accessPoint.selectedGuards);
         if (accessPoint.selectedGuards.length === 2) {
-          setShow(true);
+          setShowAlert(true);
           setAlertColor("danger");
           setAlertText("Access Point Full");
         } else {
-          setShow(true);
+          setShowAlert(true);
           setAlertColor("success");
           setAlertText("Assigning Guards To Posts");
           const {
@@ -120,8 +139,10 @@ const AccessPointList = () => {
                 console.log(female);
 
                 // remove assigned guards from unassignedGuards array
-                unassignedGuards.splice(maleIndex, 1);
-                unassignedGuards.splice(femaleIndex, 1);
+                const maleGuardIndex = unassignedGuards.indexOf(maleG.id);
+                const femaleGuardIndex = unassignedGuards.indexOf(femaleG.id);
+                unassignedGuards.splice(maleGuardIndex, 1);
+                unassignedGuards.splice(femaleGuardIndex, 1);
 
                 for (let j = 0; j <= 1; j++) {
                   console.log("updating database");
@@ -132,7 +153,7 @@ const AccessPointList = () => {
                 }
               } else {
                 console.log();
-                setShow(true);
+                setShowAlert(true);
                 setAlertColor("danger");
                 setAlertText(
                   `Insuficient number of female guards to continue assignment, stopped at ${accessPointName}`
@@ -140,7 +161,7 @@ const AccessPointList = () => {
                 return;
               }
             } else {
-              setShow(true);
+              setShowAlert(true);
               setAlertColor("danger");
               setAlertText(
                 `Insuficient number of male guards to continue assignment, stopped at ${accessPointName}`
@@ -163,7 +184,7 @@ const AccessPointList = () => {
                 // remove assigned guards from unassignedGuards array
                 unassignedGuards.splice(randIndex, 1);
               } else {
-                setShow(true);
+                setShowAlert(true);
                 setAlertColor("danger");
                 setAlertText(
                   `Could not finish assigning guards for ${accessPointName}. Please Add more guards`
@@ -181,7 +202,7 @@ const AccessPointList = () => {
       }
     } else {
       // if( ){}
-      setShow(true);
+      setShowAlert(true);
       setAlertText("Every Guard has been Assigned");
       setAlertColor("warning");
       console.log("no unassigned guards");
@@ -194,41 +215,127 @@ const AccessPointList = () => {
     await shuffleGuards();
   };
 
+  //sort the array by gender requirement
+  const sortByCheckedGender = (a, b) => {
+    if (a.checkedGender && !b.checkedGender) {
+      return -1;
+    }
+    if (!a.checkedGender && b.checkedGender) {
+      return 1;
+    }
+    return 0;
+  };
+
   //unassign all guards
   const unassignAllGuards = async () => {
-    setShow(true);
-    setAlertColor("warning");
-    setAlertText("Unassigning Guards from all Posts!");
-    for (var i = 0; i < allguards.length; i++) {
-      const currentGuard = allguards[i].id;
+    if (allguards.length === guards.length) {
+      setShowAlert(true);
+      setAlertColor("success");
+      setAlertText("All guards have been unassigned.");
+    } else {
+      setShowAlert(true);
+      setAlertColor("warning");
+      setAlertText("Unassigning All the guards!");
+      for (var i = 0; i < allguards.length; i++) {
+        const currentGuard = allguards[i].id;
 
-      //set assigned boolean to false in users collection
-      await updateDoc(doc(usersCollectionRef, currentGuard), {
-        assigned: false,
-      }).catch((e) => {
-        console.log(e);
-      });
-    }
-    for (var j = 0; j < accessPointList.length; j++) {
-      const currentAccessPoint = accessPointList[j].id;
+        //set assigned boolean to false in users collection
+        await updateDoc(doc(usersCollectionRef, currentGuard), {
+          assigned: false,
+        }).catch((e) => {
+          console.log(e);
+        });
+      }
+      for (var j = 0; j < accessPointList.length; j++) {
+        const currentAccessPoint = accessPointList[j].id;
 
-      //set all guards that were selected to empty
-      await updateDoc(doc(db, "accessPoints", currentAccessPoint), {
-        selectedGuards: [],
-      }).catch((e) => {
-        console.log(e);
-      });
+        //set all guards that were selected to empty
+        await updateDoc(doc(db, "accessPoints", currentAccessPoint), {
+          selectedGuards: [],
+        }).catch((e) => {
+          console.log(e);
+        });
+        if (i === allguards.length - 1) {
+          setShowAlert(true);
+          setAlertColor("success");
+          setAlertText("All guards have been unassigned.");
+        }
+      }
     }
   };
+
+  //Unassign guards at an access point
+
+  const Unassign = async (id) => {
+    const docRef = doc(db, "accessPoints", id);
+    const accesspoint = await getDoc(docRef).catch((e) => console.log(e));
+
+    const guardsToBeUnassigned = accesspoint.data().selectedGuards;
+    if (guardsToBeUnassigned.length === 0) {
+      setShowAlert(true);
+      setAlertColor("primary");
+      setAlertText("This post has no guards.");
+    } else {
+      for (let i = 0; i <= guardsToBeUnassigned.length; i++) {
+        const userRef = doc(db, "users", guardsToBeUnassigned[i]);
+        console.log(userRef);
+        await updateDoc(userRef, {
+          assigned: false,
+        });
+        console.log("doc updated");
+      }
+      await updateDoc(docRef, {
+        selectedGuards: [],
+      });
+      // await deleteDoc(doc(db, "accessPoints", id));
+    }
+  };
+
+  //delete an access point
+  const toggleDelete = async (id) => {
+    if (modalReturn) {
+      console.log("deleted");
+      setShowModal(false);
+      setModalReturn(null);
+    } else if (modalReturn === null) {
+      setShowModal(true);
+    } else if (!modalReturn) {
+      setShowModal(false);
+      console.log("canceled");
+      setModalReturn(null);
+
+    }
+  };
+
   return (
     <div className="accessPointList">
-      {show && (
+      {showAlert && (
         <>
           <DangerAlert
             text={alertText}
             color={alertColor}
-            onClick={() => setShow(false)}
+            onClick={() => setShowAlert(false)}
             width="50"
+          />
+        </>
+      )}
+
+      {showModal && (
+        <>
+          <ModalComponent
+            text={"Confirm deletion"}
+            Accept={() => {
+              setModalReturn(true);
+              toggleDelete();
+            }}
+            Decline={() => {
+              console.log("clicked1")
+              setModalReturn(false);
+              console.log("clicked2");
+              toggleDelete();
+              console.log("clicked3");
+              
+            }}
           />
         </>
       )}
@@ -266,7 +373,12 @@ const AccessPointList = () => {
 
           <ul className="list-group">
             {accessPointList.map((accesspoint) => (
-              <AccessPoint key={accesspoint.id} accesspoint={accesspoint} />
+              <AccessPoint
+                key={accesspoint.id}
+                accesspoint={accesspoint}
+                Unassign={() => Unassign(accesspoint.id)}
+                toggleDelete={() => toggleDelete(accesspoint.id)}
+              />
             ))}
             <li
               className="list-group-item d-flex align-items-center p-0 m-0 mb-3"

@@ -3,7 +3,7 @@ import Button from "./Button";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 
-const AccessPoint = ({ accesspoint }) => {
+const AccessPoint = ({ accesspoint, toggleDelete, Unassign }) => {
   const [show, setShow] = useState(false);
   const [guardList, setGuardList] = useState([]);
 
@@ -19,6 +19,8 @@ const AccessPoint = ({ accesspoint }) => {
   useEffect(() => {
     refreshData();
   }, []);
+
+
 
   return (
     <>
@@ -52,7 +54,8 @@ const AccessPoint = ({ accesspoint }) => {
           />
           {accesspoint.accessPointName}
         </div>
-        <div>delete</div>
+        <div onClick={toggleDelete}>delete</div>
+        <div onClick={Unassign}>Unassign</div>
       </li>
 
       <div className="d-flex">
