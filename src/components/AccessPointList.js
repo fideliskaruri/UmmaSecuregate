@@ -75,7 +75,7 @@ const AccessPointList = () => {
     refreshData();
     const timeoutId = setTimeout(() => setShowAlert(false), 5000);
     return () => clearTimeout(timeoutId);
-  }, []);
+  }, [modalReturn]);
 
   //generate random index from array size
   const generateRadomIndex = (n) => {
@@ -294,15 +294,15 @@ const AccessPointList = () => {
   //delete an access point
   const toggleDelete = async (id) => {
     if (modalReturn) {
-      console.log("deleted");
-      setShowModal(false);
+      setShowModal(null);
       setModalReturn(null);
+      console.log("deleted");
     } else if (modalReturn === null) {
       setShowModal(true);
     } else if (!modalReturn) {
-      setShowModal(false);
-      console.log("canceled");
+      setShowModal(null);
       setModalReturn(null);
+      console.log("canceled");
 
     }
   };
