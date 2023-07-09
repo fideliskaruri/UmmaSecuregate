@@ -30,7 +30,8 @@ const AccessPointList = () => {
 
   //modal states
   const [showModal, setShowModal] = useState(false);
-  const [modalReturn, setModalReturn] = useState(null);
+  const [accept, setAccept] = useState(null);
+  const [decline, setDecline] = useState(null);
 
   //guards state
   const [guards, setGuards] = useState([]); //set guards fetched from the database
@@ -75,7 +76,7 @@ const AccessPointList = () => {
     refreshData();
     const timeoutId = setTimeout(() => setShowAlert(false), 5000);
     return () => clearTimeout(timeoutId);
-  }, [modalReturn]);
+  }, []);
 
   //generate random index from array size
   const generateRadomIndex = (n) => {
@@ -291,19 +292,26 @@ const AccessPointList = () => {
     }
   };
 
+  // //modal return after clicking yes or no
+  // const modalReturn = () => {
+  //   if (decline) {
+  //     setShowModal(false);
+  //     return false;
+  //   } else if (accept === true) {
+  //     setShowModal(false);
+  //     return true;
+  //   } else {
+  //     console.log("error!");
+  //     return;
+  //   }
+  // };
   //delete an access point
   const toggleDelete = async (id) => {
-    if (modalReturn) {
-      setShowModal(null);
-      setModalReturn(null);
-      console.log("deleted");
-    } else if (modalReturn === null) {
-      setShowModal(true);
-    } else if (!modalReturn) {
-      setShowModal(null);
-      setModalReturn(null);
-      console.log("canceled");
-
+    setShowModal(true);
+    if (showModal === true) {
+      console.log("true");
+    } else if (!showModal) {
+      console.log("not working");
     }
   };
 
@@ -325,16 +333,10 @@ const AccessPointList = () => {
           <ModalComponent
             text={"Confirm deletion"}
             Accept={() => {
-              setModalReturn(true);
-              toggleDelete();
+              setAccept(true);
             }}
             Decline={() => {
-              console.log("clicked1")
-              setModalReturn(false);
-              console.log("clicked2");
-              toggleDelete();
-              console.log("clicked3");
-              
+              setDecline(true);
             }}
           />
         </>
@@ -377,7 +379,9 @@ const AccessPointList = () => {
                 key={accesspoint.id}
                 accesspoint={accesspoint}
                 Unassign={() => Unassign(accesspoint.id)}
-                toggleDelete={() => toggleDelete(accesspoint.id)}
+                toggleDelete={() => {
+                  toggleDelete(accesspoint.id);
+                }}
               />
             ))}
             <li
