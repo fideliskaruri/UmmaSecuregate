@@ -57,8 +57,8 @@ const MainContent = () => {
     <>
       <div
         className={
-          signedIn ? show && "grid-container" : "container w-100 h-100"
-        }
+          signedIn ? show && "grid-container" : "container-fluid justify-content-center"
+        } 
       >
         <Router>
           {signedIn && show && (
@@ -66,22 +66,28 @@ const MainContent = () => {
               <Sidebar showSidebar={setShow} />
             </>
           )}
+
           <aside className="maincontent">
             {signedIn && (
               <div
+              className=" btn btn-sm btn-dark border rounded hidebtn"
                 style={{
-                  position: "fixed",
+                  position: "absolute",
                   top: "0px",
+                  zIndex: 1000,
                   marginTop: "10px",
-                  marginBottom: "10px",
-                  width: "40px",
+                  // width: "35px",
+                  // height:"30px"
+                  // backgroundColor:"red",
                 }}
+                  onClick={() => setShow(!show)}
               >
-                <Button
+                <CiMenuFries />
+                {/* <Button
                   text={<CiMenuFries />}
                   onClick={() => setShow(!show)}
                   color={"outline-secondary"}
-                />
+                /> */}
               </div>
             )}
             <div className="mt-3">

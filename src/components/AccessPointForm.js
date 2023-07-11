@@ -43,6 +43,7 @@ const AccessPointForm = () => {
           text={"Please fill in access point name!"}
           color={"danger"}
           onClick={() => setShow(false)}
+          timeAlert={setShow}
         />
       )}
 

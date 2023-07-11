@@ -12,10 +12,13 @@ const Admin = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [gender, setGender] = useState("");
   const [role, setRole] = useState("");
-  const [showAlert, setAlert] = useState(false);
-  const [passMissMatch, setPassMissMatch] = useState(false);
   const [file, setFile] = useState("");
   const navigate = useNavigate();
+
+  //Danger Alert States
+  const [alertText, setAlertText] = useState("");
+  const [alertColor, setAlertColor] = useState("");
+  const [showAlert, setShowAlert] = useState(true);
 
   const { createUser, emailInUse, setEmailInUse } = UserAuth();
 
@@ -30,22 +33,34 @@ const Admin = () => {
       !gender ||
       !role
     ) {
-      setAlert(true);
+      setShowAlert(true);
+      setAlertColor("info");
+      setAlertText("Make sure to fill in all the fields!");
     } else {
       if (password !== confirmPassword) {
-        setPassMissMatch(true);
+        setAlertColor("warning");
+        setAlertText("Passwords don't match!");
+        setShowAlert(true);
       } else {
         const file = document.getElementById("formFile").files[0];
 
         createUser(firstname, lastname, role, gender, email, password, file);
-        setFirstName("");
-        setLastName("");
-        setEmail("");
-        setPassword("");
-        setConfirmPassword("");
-        setGender("");
-        setRole("");
-        setFile("");
+
+        if (emailInUse) {
+          setShowAlert(true);
+          setAlertColor("info");
+          setAlertText("Email is already in use!");
+          return;
+        } else {
+          setFirstName("");
+          setLastName("");
+          setEmail("");
+          setPassword("");
+          setConfirmPassword("");
+          setGender("");
+          setRole("");
+          setFile("");
+        }
       }
     }
   };
@@ -59,8 +74,10 @@ const Admin = () => {
       <form className="mt-5" onSubmit={onSubmit}>
         {showAlert && (
           <DangerAlert
-            text={"Please make sure to fill in every field"}
-            onClick={() => setAlert(false)}
+            text={alertText}
+            color={alertColor}
+            onClick={() => setShowAlert(false)}
+            timeAlert={setShowAlert}
           />
         )}
         <label htmlFor="">Guard Names</label>
@@ -80,12 +97,7 @@ const Admin = () => {
             onChange={(e) => setLastName(e.target.value)}
           />
         </div>
-        {emailInUse && (
-          <DangerAlert
-            text={"Email already in use!"}
-            onClick={() => setEmailInUse(false)}
-          />
-        )}
+
         <label> Email</label>
         <div className="mb-3">
           <input
@@ -96,12 +108,7 @@ const Admin = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        {passMissMatch && (
-          <DangerAlert
-            text={"Passwords don't match!"}
-            onClick={() => setPassMissMatch(false)}
-          />
-        )}
+
         <label htmlFor="inputPassword2">Password</label>
         <div className="w-75 input-group mb-3">
           <input

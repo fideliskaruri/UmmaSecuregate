@@ -1,9 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Button from "./Button";
 
-const ModalComponent = ({ text, Accept, Decline }) => {
+const ModalComponent = ({ text, handleModalAction, handleShowModal }) => {
+  const [value, setValue] = useState("");
+
+  //handle submit
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleModalAction(value);
+    handleShowModal(false);
+  };
 
   useEffect(() => {
+    setValue("");
     const preventTab = (e) => {
       if (e.keyCode === 9) {
         e.preventDefault();
@@ -20,34 +29,33 @@ const ModalComponent = ({ text, Accept, Decline }) => {
       className="rounded modal "
       style={{
         position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
         zIndex: 9999,
         display: "flex",
-        alignItems: "center",
+        alignItems: "start",
         justifyContent: "center",
         backgroundColor: "rgba(0, 0, 0, 0.5)", // add a translucent background
       }}
     >
-      <div
-        className="rounded text-bg-dark"
-        style={{
-          width: "300px",
-          height: "100px", // add a white background for the content
-          padding: "10px", // add some padding for the content
-          display: "flex",
-          flexDirection: "column", // make the content vertical
-          alignItems: "center", // center the content horizontally
-          justifyContent: "space-between", // space out the content vertically
-        }}
+      <form
+        className="w-25 h-25 mt-5 rounded border border-light text-bg-dark d-flex justify-content-center align-items-center"
+        onSubmit={handleSubmit}
       >
-        <h2>{text}</h2>
         <div>
-          <Button text={"Yes"} color={"danger"} onClick={Accept} />
-          <Button text={"No"} color={"outline-primary"} onClick={Decline} />
+          <h4>{text}</h4>
+          <input
+            className="btn btn-danger btn-lg m-3 mb-0"
+            type="submit"
+            onClick={(e) => setValue(e.target.value)}
+            value="Yes"
+          />
+          <input
+            className="btn btn-primary btn-lg m-3 mb-0"
+            type="submit"
+            onClick={(e) => setValue(e.target.value)}
+            value="No"
+          />
         </div>
-      </div>
+      </form>
     </div>
   );
 };

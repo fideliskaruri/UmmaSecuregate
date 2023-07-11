@@ -30,8 +30,7 @@ const AccessPointList = () => {
 
   //modal states
   const [showModal, setShowModal] = useState(false);
-  const [accept, setAccept] = useState(null);
-  const [decline, setDecline] = useState(null);
+  const [modalAction, setModalAction] = useState("");
 
   //guards state
   const [guards, setGuards] = useState([]); //set guards fetched from the database
@@ -74,8 +73,6 @@ const AccessPointList = () => {
   useEffect(() => {
     checkAdmin().then((result) => setIsAdmin(result));
     refreshData();
-    const timeoutId = setTimeout(() => setShowAlert(false), 5000);
-    return () => clearTimeout(timeoutId);
   }, []);
 
   //generate random index from array size
@@ -100,6 +97,12 @@ const AccessPointList = () => {
       }
     });
 
+    if (accessPointList.length === 0) {
+      setShowAlert(true);
+      setAlertColor("info");
+      setAlertText("Please add access points!");
+      return;
+    }
     if (unassignedGuards.length > 0) {
       // sort the access points by checkedGender
       accessPointList.sort(sortByCheckedGender);
@@ -277,7 +280,7 @@ const AccessPointList = () => {
       setAlertColor("primary");
       setAlertText("This post has no guards.");
     } else {
-      for (let i = 0; i <= guardsToBeUnassigned.length; i++) {
+      for (let i = 0; i < guardsToBeUnassigned.length; i++) {
         const userRef = doc(db, "users", guardsToBeUnassigned[i]);
         console.log(userRef);
         await updateDoc(userRef, {
@@ -292,29 +295,31 @@ const AccessPointList = () => {
     }
   };
 
-  // //modal return after clicking yes or no
-  // const modalReturn = () => {
-  //   if (decline) {
-  //     setShowModal(false);
-  //     return false;
-  //   } else if (accept === true) {
-  //     setShowModal(false);
-  //     return true;
-  //   } else {
-  //     console.log("error!");
-  //     return;
-  //   }
-  // };
-  //delete an access point
+  //deletes access point an unassigns guards that were assigned to it
   const toggleDelete = async (id) => {
-    setShowModal(true);
-    if (showModal === true) {
-      console.log("true");
-    } else if (!showModal) {
-      console.log("not working");
-    }
-  };
+    const docRef = doc(db, "accessPoints", id);
+    const accesspoint = await getDoc(docRef).catch((e) => console.log(e));
 
+    const guardsToBeUnassigned = accesspoint.data().selectedGuards;
+
+    setShowAlert(true);
+    setAlertColor("danger");
+    setAlertText("Unassigning guards from access point!");
+
+    for (let i = 0; i < guardsToBeUnassigned.length; i++) {
+      const userRef = doc(db, "users", guardsToBeUnassigned[i]);
+      console.log(userRef);
+      await updateDoc(userRef, {
+        assigned: false,
+      });
+    }
+    await updateDoc(docRef, {
+      selectedGuards: [],
+    });
+
+    setAlertText(`Deleting ${accesspoint.data().access}`);
+    await deleteDoc(doc(db, "accessPoints", id));
+  };
   return (
     <div className="accessPointList">
       {showAlert && (
@@ -323,29 +328,13 @@ const AccessPointList = () => {
             text={alertText}
             color={alertColor}
             onClick={() => setShowAlert(false)}
+            timeAlert={setShowAlert}
             width="50"
           />
         </>
       )}
-
-      {showModal && (
-        <>
-          <ModalComponent
-            text={"Confirm deletion"}
-            Accept={() => {
-              setAccept(true);
-            }}
-            Decline={() => {
-              setDecline(true);
-            }}
-          />
-        </>
-      )}
       {isAdmin && (
-        <div
-          className="d-flex input-group justify-content-start w-100 "
-          style={{ height: "50px" }}
-        >
+        <div className="d-flex input-group justify-content-start w-100 ">
           <Button
             text={showForm ? "Close" : "Add Access Point"}
             onClick={() => setShowForm(!showForm)}
@@ -368,10 +357,19 @@ const AccessPointList = () => {
           />
         </div>
       )}
-
-      <div className="mainContainer " style={{ cursor: "pointer" }}>
-        <div>
-          <h2 className="text-light mb-0">Access Points</h2>
+      <div className="listarea mainContainer">
+        <div className="listarea">
+          {accessPointList.length > 0 ? (
+            <h4 className="text-light mb-0">Access Points</h4>
+          ) : isAdmin ? (
+            <h4 className="text-light mb-0">
+              Add Access Points To Start Assigning guards.
+            </h4>
+          ) : (
+            <h4 className="text-light mb-0">
+              Access Point List empty, wait for update.
+            </h4>
+          )}
 
           <ul className="list-group">
             {accessPointList.map((accesspoint) => (
@@ -379,36 +377,29 @@ const AccessPointList = () => {
                 key={accesspoint.id}
                 accesspoint={accesspoint}
                 Unassign={() => Unassign(accesspoint.id)}
-                toggleDelete={() => {
-                  toggleDelete(accesspoint.id);
-                }}
+                toggleDelete={() => toggleDelete(accesspoint.id)}
               />
             ))}
-            <li
-              className="list-group-item d-flex align-items-center p-0 m-0 mb-3"
-              style={{ height: "40px", fontFamily: "monospace" }}
-            >
-              <input
-                className="form-control"
-                value={`${showForm ? "Close Form" : "Add Access Point"}`}
-                type="button"
-                onClick={() => setShowForm(!showForm)}
-              />
-            </li>
-            {showForm && <AccessPointForm />}
+            {isAdmin && (
+              <>
+                <li
+                  className="list-group-item d-flex align-items-center p-0 m-0 mb-3"
+                  style={{ height: "40px", fontFamily: "monospace" }}
+                >
+                  <input
+                    className="form-control"
+                    value={`${showForm ? "Close Form" : "Add Access Point"}`}
+                    type="button"
+                    onClick={() => setShowForm(!showForm)}
+                  />
+                </li>
+                {showForm && <AccessPointForm />}
+              </>
+            )}
           </ul>
         </div>
-        <div>
-          {guards.length > 0 ? (
-            <h2 className="text-light mb-0">Unassigned Guards</h2>
-          ) : (
-            <h2 className="text-light mb-0">All guards have been assigned</h2>
-          )}
 
-          <div className="mainContainer">
-            <UnassignedGuards guards={guards} />
-          </div>
-        </div>
+        <UnassignedGuards guards={guards} />
       </div>
     </div>
   );

@@ -9,12 +9,16 @@
     
 }
 
+.logo{
+  background-color: transparent;
+  width: 120px;
+}
 
 .sidebar {
     display: grid;
     grid-template-rows: repeat(auto-fit, minmax(0, 1fr));
     grid-gap: 10px;
-    padding: 20px 0px 0px 0px;
+    padding: 10px 0px 0px 0px;
     height: 100%;
 }
 
@@ -23,11 +27,10 @@
     justify-content:start;
     justify-items: center;
     /* align-items: center; */
-    padding-left: 30px;
+    padding-left: 20px;
     height: 30px;
     width: 200px;
     background-color: transparent;
-
 
 }
 
@@ -53,34 +56,81 @@
     grid-gap: 10px;
     padding:0px 10px 0px 0px;
     background-color: transparent;
-    overflow-y: auto ;
+    height: 100%;
 }
-.mainContainer::-webkit-scrollbar {
+.accessPointList{
+  height: 100vh !important;
+}
+.form-group{
+  width: 30%;
+}
+/* .mainContainer::-webkit-scrollbar {
   width: 0px;
-}
-@media (max-width: 800px) {
+} */
+@media (min-width:200px) and (max-width: 600px) {
   .mainContainer {
       display: grid;
       grid-template-columns: 1fr;
       grid-gap: 10px;
-      padding: 0px 10px 0px 0px;
+      padding: 10px;
       background-color: transparent;
-      width: 500px;
-    overflow-y: auto;
+      width: 90vw;
+
 
     }
-    .accessPointList{
-      width: 500px;
+    .logo{
+    width: 120px;
+    padding-bottom: 30px;
+    padding-left: 30px;
+    background-color: transparent,
     }
+        .grid-container {
+          display: flex;
+          /* Adjust the widths as needed */
+          grid-gap: 30px;
+          height: 100vh;
+          padding: 0px;
+          /* Adjust the gap between columns */
+          background-color: #343541;
+    
+        }
+        .hidebtn{
+          padding:0px;
+          margin: 0px;
+
+        }
+        .form-group{
+          width: 100% ;
+        }
+    .sidebar {
+      display: grid;
+      position: absolute;
+      z-index: 1000;
+
+      grid-template-rows: repeat(auto-fit, minmax(0, 1fr));
+      grid-gap: 10px;
+      padding: 10px 0px 0px 0px;
+      height: 100%;
+    }
+ 
+    *{
+      font-size: 11px !important;
+    }
+  
+    h2{
+      font-size: small !important;
+    }
+   .listarea{
+    width:100%;
+    padding: 10px;
+   }
+     button {
+       width: 100%;
+     }
 }
 
 
-.listarea {
-  max-height: 500px;
-  max-width: 500px;
-  overflow-y: auto;
-  margin-right: 5px;
-}
+
 .listarea::-webkit-scrollbar {
   width: 0px;
   /* Width of the scrollbar */
@@ -92,13 +142,13 @@
 
 
 .maincontent {
-    padding: 30px 10px 0px 0px;
-    height: 100%;
-    overflow-y: auto;
+    padding: 20px 10px 0px 20px;
+    height: fit-content;
+    width:100%;
+
 }
-.maincontent ::-webkit-scrollbar{
-  width: 0px;
-}
+
+
 .usersListArea{
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -106,6 +156,17 @@
   overflow-y: auto;
   max-height: 85vh;
 
+}
+.historyPage {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  max-height: 90vh;
+  grid-gap: 30px;
+  overflow-y: auto;
+
+}
+.accessPointList{
+  max-height: 80vh;
 }
 @media (max-width: 1020px) {
   .usersListArea {
@@ -116,16 +177,35 @@
     max-height: 85vh;
 
   }
+    .historyPage {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      max-height: 90vh;
+      grid-gap: 30px;
+      overflow-y: auto;
+  
+    }
 }@media (max-width: 800px) {
   .usersListArea {
-    display: grid;
-    justify-content: center;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     grid-gap: 5px;
     overflow-y: auto;
     max-height: 85vh;
-    max-width: 360px;
+    max-width: 100%;
   }
+         /* button {
+           width: 20%;
+         } */
+    .historyPage {
+      display: grid;
+      grid-template-columns: 1fr;
+      max-height: 90vh;
+      grid-gap: 30px;
+      overflow-y: auto;
+  
+    }
 }
 p{
   text-decoration: underline;
@@ -141,25 +221,16 @@ button{
 }
 .listarea{
   overflow-y: auto;
-  max-height: 500px;
+  overflow-x: hidden;
+  height: fit-content;
+  max-height: 560px;
 }
 
 .listarea::-webkit-scrollbar {
   width: 0px; /* Width of the scrollbar */
 }
 
-.listarea::-webkit-scrollbar-track {
-  background-color: #f1f1f1; /* Color of the track */
-}
 
-.listarea::-webkit-scrollbar-thumb {
-  background-color: #888; /* Color of the scrollbar handle */
-  border-radius: 50px;
-}
-
-.listarea::-webkit-scrollbar-thumb:hover {
-  background-color: #555; /* Color of the scrollbar handle on hover */
-}
 .footer {
     position: fixed;
     bottom: 0px;
@@ -175,14 +246,7 @@ label{
   color: #fff;
 }
 
-.historyPage{
-  display:grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  max-height: 90vh;
-  grid-gap: 30px;
-  overflow-y: auto  ;
-  
-}
+
 .historyPage::-webkit-scrollbar{
   width: 8px;
   
@@ -244,16 +308,4 @@ label{
     top: 10px;
   }
   
-}
-
-.modal-open {
-  pointer-events: none;
-  outline: none;
-  /* Add this style */
-}
-
-.modal-open .modal {
-  pointer-events: auto;
-  /* Add this style */
-  visibility: visible;
 }

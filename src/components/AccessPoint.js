@@ -2,12 +2,18 @@ import { useState, useEffect } from "react";
 import Button from "./Button";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../firebaseConfig";
+import { UserAuth } from "../context/AuthContext";
 
 const AccessPoint = ({ accesspoint, toggleDelete, Unassign }) => {
   const [show, setShow] = useState(false);
   const [guardList, setGuardList] = useState([]);
+  //admin state
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const guardsCollectionRef = collection(db, "users");
+
+  //check admin privileges
+  const { checkAdmin } = UserAuth();
 
   const refreshData = () => {
     onSnapshot(guardsCollectionRef, (snapshot) => {
@@ -17,10 +23,9 @@ const AccessPoint = ({ accesspoint, toggleDelete, Unassign }) => {
   };
 
   useEffect(() => {
+    checkAdmin().then((result) => setIsAdmin(result));
     refreshData();
   }, []);
-
-
 
   return (
     <>
@@ -54,8 +59,14 @@ const AccessPoint = ({ accesspoint, toggleDelete, Unassign }) => {
           />
           {accesspoint.accessPointName}
         </div>
-        <div onClick={toggleDelete}>delete</div>
-        <div onClick={Unassign}>Unassign</div>
+        <div className="d-flex  w-50 justify-content-between">
+          {isAdmin && (
+            <>
+              <div onClick={toggleDelete}>delete</div>
+              <div onClick={Unassign}>Unassign</div>
+            </>
+          )}
+        </div>
       </li>
 
       <div className="d-flex">

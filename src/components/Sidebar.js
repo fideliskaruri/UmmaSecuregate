@@ -59,12 +59,12 @@ const Sidebar = ({ showSidebar }) => {
       label: "Access Points",
       icon: CiRainbow,
     },
-    {
-      path: "/accesslogs",
-      label: "Access Logs",
-      icon: CiFileOn,
-      showIfAdmin: true,
-    },
+    // {
+    //   path: "/accesslogs",
+    //   label: "Access Logs",
+    //   icon: CiFileOn,
+    //   showIfAdmin: true,
+    // },
     {
       path: "/history",
       label: "History",
@@ -84,41 +84,32 @@ const Sidebar = ({ showSidebar }) => {
 
   return (
     <>
-    
-      <div className={"grid-container"}>
-        <ul className="sidebar text-bg-dark">
-          <li>
-            <Link to="/dashboard" className="sidebar-link">
-              <Logo
-                style={{
-                  backgroundColor: "transparent",
-                  width: "100px",
-                  height: "40px",
-                }}
-              />
-            </Link>
-          </li>
-          {links.map((link, index) => {
-            if (link.showIfAdmin && !isAdmin) return null;
-            return (
-              <li key={index}>
-                <Link to={link.path} className="sidebar-link">
-                  {React.createElement(link.icon, {
-                    style: {
-                      backgroundColor: "transparent",
-                    },
-                  })}
-                  <span className="link-text">{link.label}</span>
-                </Link>
-              </li>
-            );
-          })}
+      <ul className="sidebar text-bg-dark ">
+        <li className="logocontainer">
+          <Link to="/dashboard" className="sidebar-link">
+            <Logo className="logo" />
+          </Link>
+        </li>
+        {links.map((link, index) => {
+          if (link.showIfAdmin && !isAdmin) return null;
+          return (
+            <li key={index}>
+              <Link to={link.path} className="sidebar-link">
+                {React.createElement(link.icon, {
+                  style: {
+                    backgroundColor: "transparent",
+                  },
+                })}
+                <small className="link-text">{link.label}</small>
+              </Link>
+            </li>
+          );
+        })}
 
-          <li>
-            <Button text={"Logout"} color={"outline-light"} onClick={logOut} />
-          </li>
-        </ul>
-      </div>
+        <li>
+          <Button text={"Logout"} color={"outline-light"} onClick={logOut} />
+        </li>
+      </ul>
     </>
   );
 };

@@ -120,7 +120,6 @@ export const AuthContextProvider = ({ children }) => {
     );
 
     if (emailExists) {
-      console.log("Email already in use");
       setEmailInUse(true);
 
       return;

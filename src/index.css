@@ -16,11 +16,11 @@ body, html{
 .App{
   height: 100vh;
   width: 100vw;
-  min-width: 720px;
-  max-height: 100vh;
+  min-width: 200px;
+  max-height: 900px;
   min-height: 100vh;
   background-color: #343541;
-  overflow:auto ;
+  overflow:hidden ;
 }
 .App::-webkit-scrollbar{
   width: 0px;

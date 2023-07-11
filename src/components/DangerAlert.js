@@ -1,4 +1,11 @@
-const DangerAlert = ({ onClick, text, color, width }) => {
+import { useEffect } from "react";
+
+const DangerAlert = ({ onClick, text, color, width, timeAlert }) => {
+    useEffect(() => {
+      const timeoutId = setTimeout(() => timeAlert(false), 3000);
+      return () => clearTimeout(timeoutId);
+    }, []);
+
   return (
     <>
       <div
@@ -11,7 +18,9 @@ const DangerAlert = ({ onClick, text, color, width }) => {
           position: "absolute",
           top: "-150px",
           right: "0px",
+          left:"0px",
           height: "30px",
+          zIndex: "9999",
         }}
       >
         {text}
