@@ -11,10 +11,15 @@ import { db } from "../firebaseConfig";
 import Button from "./Button";
 import { UserAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { IoMdArrowDropdownCircle } from "react-icons/io";
 
-const UserManagement = ({ guard }) => {
+const UserManagement = () => {
   const [userList, setUserList] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  //list states
+  const [showGuards, setShowGuards] = useState(false);
+  const [showAdmins, setShowAdmins] = useState(false);
+  const [showSupervisors, setShowSupevisors] = useState(false);
   const collectionRef = collection(db, "users");
   const navigate = useNavigate();
   const { checkAdmin } = UserAuth();
@@ -33,6 +38,7 @@ const UserManagement = ({ guard }) => {
 
   return (
     <>
+    
       {isAdmin && (
         <Button
           text={"Add User"}
@@ -41,10 +47,87 @@ const UserManagement = ({ guard }) => {
         />
       )}
 
-      <div className="usersListArea">
-        {userList.map((user) => (
-          <UserCard key={user.id} guard={user} />
-        ))}
+      <div className="usersListArea" style={{ cursor: "pointer" }}>
+        <ul className="list-group container-fluid">
+          <li
+            className="list-group-item  text-capitalize bg-light text-dark rounded d-flex align-items-center "
+            onClick={() => setShowAdmins(!showAdmins)}
+          >
+            <div
+              className="rounded-circle"
+              style={{
+                width: "15px",
+                height: "15px",
+                marginRight: "10px",
+                backgroundColor: `${showAdmins ? "lightgreen" : "lightblue"}`,
+              }}
+            />
+            Administrators
+          </li>
+          <li className="listarea">
+            {showAdmins &&
+              userList.map(
+                (user) =>
+                  user.role === "Admin" && (
+                    <UserCard key={user.id} user={user} />
+                  )
+              )}
+          </li>
+        </ul>
+        <ul className="list-group container-fluid">
+          <li
+            className="list-group-item w-100 text-capitalize bg-light text-dark rounded d-flex align-items-center"
+            onClick={() => setShowSupevisors(!showSupervisors)}
+          >
+            <div
+              className="rounded-circle"
+              style={{
+                width: "15px",
+                height: "15px",
+                marginRight: "10px",
+                backgroundColor: `${
+                  showSupervisors ? "lightgreen" : "lightblue"
+                }`,
+              }}
+            />
+            Supervisors
+          </li>
+          <li className="listarea">
+            {showSupervisors &&
+              userList.map(
+                (user) =>
+                  user.role === "Supervisor" && (
+                    <UserCard key={user.id} user={user} />
+                  )
+              )}
+          </li>
+        </ul>
+        <ul className="list-group container-fluid">
+          <li
+            className="list-group-item w-100 text-capitalize bg-light text-dark rounded d-flex align-items-center"
+            onClick={() => setShowGuards(!showGuards)}
+          >
+            <div
+              className="rounded-circle"
+              style={{
+                width: "15px",
+                height: "15px",
+                marginRight: "10px",
+                backgroundColor: `${showGuards ? "lightgreen" : "lightblue"}`,
+              }}
+            />
+            Guards
+          </li>
+          <li className="listarea">
+            {showGuards &&
+              userList.map(
+                (user) =>
+                  user.role === "Guard" && (
+                    <UserCard key={user.id} user={user} />
+                  )
+              )}
+          </li>
+        </ul>
       </div>
     </>
   );

@@ -10,8 +10,10 @@ const AddIncident = ({ onAdd }) => {
   const [registrationNumber, setRegistrationNumber] = useState("");
   const [incidentDescription, setDescription] = useState("");
   const [title, setTitle] = useState("");
+  const [incidentType, setIncidentType] = useState("");
   const [showAlert, setAlert] = useState(false);
-  const { user, date } = UserAuth();
+  const [text, setText] = useState("");
+  const { user } = UserAuth();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -20,8 +22,10 @@ const AddIncident = ({ onAdd }) => {
       !lastname ||
       !registrationNumber ||
       !incidentDescription ||
-      !title
+      !title ||
+      !incidentType
     ) {
+      setText("Please fill in all the fields.");
       setAlert(true);
     } else {
       try {
@@ -34,8 +38,8 @@ const AddIncident = ({ onAdd }) => {
           registrationNumber,
           incidentDescription,
           title,
-
-          date,
+          date: Date(),
+          timeReported: Date.now(),
           completed: false,
           id: customId,
           user: user.uid,
@@ -58,12 +62,15 @@ const AddIncident = ({ onAdd }) => {
     <form className="mt-3" onSubmit={onSubmit}>
       {showAlert && (
         <DangerAlert
-          text={"Please make sure to fill in every field"}
+          text={text}
           onClick={() => setAlert(false)}
+          timeAlert={setAlert}
+          color={"warning"}
+          width={"25"}
         />
       )}
       <label htmlFor="">Names</label>
-      <div className="input-group mb-3 w-75">
+      <div className="input-group mb-3">
         <input
           className="form-control"
           type="text"
@@ -88,7 +95,7 @@ const AddIncident = ({ onAdd }) => {
         onChange={(e) => setRegistrationNumber(e.target.value)}
       />
       <label htmlFor="">Incident Title</label>
-      <div className="input-group w-75">
+      <div className="input-group w-100 mb-3">
         <input
           className="form-control mb-3"
           type="text"
@@ -96,12 +103,35 @@ const AddIncident = ({ onAdd }) => {
           placeholder="Incident Title"
           onChange={(e) => setTitle(e.target.value)}
         />
+        <select
+          className=" form-control h-25"
+          aria-label="Default select example"
+          value={incidentType}
+          onChange={(e) => setIncidentType(e.target.value)}
+        >
+          <option>Select incident type</option>
+          <option value="Theft or Burglary">Theft or Burglary</option>
+          <option value="Vandalism">Vandalism</option>
+          <option value="Assault or Physical Altercation">
+            Assault or Physical Altercation
+          </option>
+          <option value="Harassment or Threats">Harassment or Threats</option>
+          <option value="Property Damage">Property Damage</option>
+          <option value="Fire or Smoke Incident">Fire or Smoke Incident</option>
+          <option value="Medical Emergency">Medical Emergency</option>
+          <option value="Suspicious Activity or Persons">
+            Suspicious Activity or Persons
+          </option>
+          <option value="Cybersecurity Breach">Cybersecurity Breach</option>
+          <option value="Lost or Stolen Items">Lost or Stolen Items</option>
+          {/* Add more incident types as needed */}
+        </select>
       </div>
 
       <label htmlFor="">Incident Description</label>
       <textarea
         rows={"6"}
-        className="form-control mb-3 w-75 "
+        className="form-control mb-3 "
         type="text"
         value={incidentDescription}
         placeholder="Describe the incident"

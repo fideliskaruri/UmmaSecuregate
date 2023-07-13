@@ -15,20 +15,16 @@ const SecurityIncidents = () => {
 
   return (
     <>
-      <div>
-        <div className="">
-          <Button
-            text={showForm ? "Close" : "New"}
-            color={"outline-light"}
-            onClick={showIncidentTrackingForm}
-          />
-        </div>
-
-        <div className="mainContainer">
-          <div className="">{!showForm && <IncidentList />}</div>
-          <div className="">{!showForm && <InProgress />}</div>
-        </div>
+      <div className="">
+        <Button
+          text={showForm ? "Close" : "New"}
+          color={"outline-light"}
+          onClick={showIncidentTrackingForm}
+        />
       </div>
+
+      <div className="">{!showForm && <IncidentList />}</div>
+
       {showForm && <AddIncident />}
     </>
   );

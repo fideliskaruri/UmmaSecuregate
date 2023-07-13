@@ -8,10 +8,12 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
+import { UserAuth } from "../context/AuthContext";
 
 const InProgress = () => {
   const [incidentList, setIncidentList] = useState([]);
   const collectionRef = collection(db, "incidents");
+  const { currentTime } = UserAuth();
 
   const refreshData = async () => {
     onSnapshot(collectionRef, (snapshot) => {
@@ -31,9 +33,7 @@ const InProgress = () => {
     try {
       const incidentRef = doc(db, "history", customId);
 
-      await setDoc(incidentRef, incident);
-
-      console.log("Document written with custom ID: ", customId);
+      await setDoc(incidentRef, { incident, timeComplete: currentTime });
     } catch (e) {
       console.error("Error adding document: ", e);
     }

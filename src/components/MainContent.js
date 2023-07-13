@@ -49,16 +49,37 @@ const MainContent = () => {
     };
     // Call the checkUser function
     checkUser();
+
     // Set the loading state to false after checking the user
     setLoading(false);
+
+    //handling when to show the sidebar depending on the screen size
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        // Change the breakpoint as per your requirements
+        setShow(true);
+      } else {
+        setShow(false);
+      }
+    };
+
+    // Add event listener for window resize
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   });
 
   return (
     <>
       <div
         className={
-          signedIn ? show && "grid-container" : "container-fluid justify-content-center"
-        } 
+          signedIn
+            ? show && "grid-container"
+            : "container-fluid justify-content-center"
+        }
       >
         <Router>
           {signedIn && show && (
@@ -70,7 +91,7 @@ const MainContent = () => {
           <aside className="maincontent">
             {signedIn && (
               <div
-              className=" btn btn-sm btn-dark border rounded hidebtn"
+                className=" btn btn-sm btn-dark border rounded hidebtn"
                 style={{
                   position: "absolute",
                   top: "0px",
@@ -80,7 +101,7 @@ const MainContent = () => {
                   // height:"30px"
                   // backgroundColor:"red",
                 }}
-                  onClick={() => setShow(!show)}
+                onClick={() => setShow(!show)}
               >
                 <CiMenuFries />
                 {/* <Button

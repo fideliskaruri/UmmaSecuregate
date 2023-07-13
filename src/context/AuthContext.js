@@ -73,6 +73,11 @@ export const AuthContextProvider = ({ children }) => {
       return;
     }
   };
+
+  //current seconds
+  const currentTime = () => {
+    return Date.now;
+  };
   //function to save the failed or succefull access log to the firestore db
   const saveAccessLog = async (email, success, type) => {
     const accessLogRef = collection(db, "accessLogs");
@@ -238,6 +243,7 @@ export const AuthContextProvider = ({ children }) => {
     show,
     alertColor,
     alertText,
+    currentTime,
   };
 
   return (

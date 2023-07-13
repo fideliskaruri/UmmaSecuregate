@@ -1,32 +1,35 @@
-const UserCard = ({ guard }) => {
+const UserCard = ({ user }) => {
   return (
     <div
-      className=" text-bg-dark mb-3 d-flex rounded-pill align-items-center userCard "
+      className="d-flex flex-column text-bg-dark mb-3 rounded align-items-start justify-content-center border text  "
       style={{
-        maxHeight: "150px",
-        minWidth: "330px",
-        maxWidth: "335px",
-        fontSize: "10px",
+        height: "200px",
+        minWidth: "260px",
+        maxWidth: "100%",
+        fontSize: "11px",
+        padding: "10px",
       }}
     >
-      <img
-        className="card-img-top rounded-circle "
-        src={`${guard.imageURL}`}
-        alt=""
-        style={{
-          maxHeight: "100px",
-          minHeight: "100px",
-          maxWidth: "100px",
-          marginRight: "10px",
-        }}
-      />
-      <div className="card-body mt-2  ">
-        <p className="card-title text-uppercase">
-          Name: {guard.firstname} {guard.lastname}
-        </p>
-        <p>Gender: {guard.gender}</p>
-        <p>Role: {guard.role}</p>
-        <p>Contact: {guard.email}</p>
+      <div>
+        <img
+          className="card-img-top rounded-circle "
+          src={`${user.imageURL}`}
+          alt=""
+          style={{
+            maxHeight: "55px",
+            minHeight: "55px",
+            maxWidth: "55px",
+            marginRight: "10px",
+          }}
+        />
+        <div className="card-body mt-2 w-100">
+          <h4 className="card-title text-uppercase mb-2">
+            Name: {user.firstname} {user.lastname}
+          </h4>
+          <h6>Gender: {user.gender}</h6>
+          <h6>Role: {user.role}</h6>
+          <h6>Contact: {user.email}</h6>
+        </div>
       </div>
     </div>
   );

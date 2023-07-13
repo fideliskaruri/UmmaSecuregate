@@ -9,7 +9,7 @@ const DangerAlert = ({ onClick, text, color, width, timeAlert }) => {
   return (
     <>
       <div
-        className={`d-flex alert alert-${color} alert-dismissible fade show w-${width} align-items-center justify-content-center p-2 alertPopup`}
+        className={`d-flex alert alert-${color} alert-dismissible fade show w-${width} align-items-center justify-content-center p-2 m-3   alertPopup`}
         role="alert"
         onClick={onClick}
         style={{
@@ -18,7 +18,6 @@ const DangerAlert = ({ onClick, text, color, width, timeAlert }) => {
           position: "absolute",
           top: "-150px",
           right: "0px",
-          left:"0px",
           height: "30px",
           zIndex: "9999",
         }}

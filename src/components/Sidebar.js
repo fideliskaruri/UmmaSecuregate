@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import {
   CiSquareQuestion,
@@ -20,7 +20,7 @@ const Sidebar = ({ showSidebar }) => {
   const navigate = useNavigate();
   const { saveAccessLog, user } = UserAuth();
   const { checkAdmin } = UserAuth();
-
+  const location = useLocation().pathname;
   useEffect(() => {
     checkAdmin().then((result) => setIsAdmin(result));
   });
@@ -86,7 +86,7 @@ const Sidebar = ({ showSidebar }) => {
     <>
       <ul className="sidebar text-bg-dark ">
         <li className="logocontainer">
-          <Link to="/dashboard" className="sidebar-link">
+          <Link to="/dashboard" >
             <Logo className="logo" />
           </Link>
         </li>
@@ -94,7 +94,10 @@ const Sidebar = ({ showSidebar }) => {
           if (link.showIfAdmin && !isAdmin) return null;
           return (
             <li key={index}>
-              <Link to={link.path} className="sidebar-link">
+              <Link
+                to={link.path}
+                className={`sidebar-link ${location === link.path && "active"}`}
+              >
                 {React.createElement(link.icon, {
                   style: {
                     backgroundColor: "transparent",
