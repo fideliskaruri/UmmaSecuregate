@@ -1,6 +1,6 @@
 import { useState } from "react";
 import DangerAlert from "./DangerAlert";
-import { doc, setDoc } from "firebase/firestore";
+import { arrayUnion, doc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { UserAuth } from "../context/AuthContext";
 
@@ -31,6 +31,7 @@ const AddIncident = ({ onAdd }) => {
       try {
         const customId = crypto.randomUUID(); // Set your custom ID here
         const incidentRef = doc(db, "incidents", customId);
+        const userId = user.uid;
 
         await setDoc(incidentRef, {
           firstname,
@@ -42,8 +43,17 @@ const AddIncident = ({ onAdd }) => {
           timeReported: Date.now(),
           completed: false,
           id: customId,
-          user: user.uid,
+          user: userId,
         });
+
+        // //update the reported incidents array
+        await setDoc(
+          doc(db, "users", userId),
+          {
+            ReportedIncidents: arrayUnion(customId),
+          },
+          { merge: true }
+        );
 
         console.log("Document written with custom ID: ", customId);
       } catch (e) {

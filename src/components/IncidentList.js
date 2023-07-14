@@ -6,6 +6,9 @@ import {
   deleteDoc,
   onSnapshot,
   setDoc,
+  getDocs,
+  updateDoc,
+  arrayRemove,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 
@@ -32,7 +35,6 @@ const IncidentList = () => {
   const setIncidentSolved = async (id) => {
     const updatedData = doc(db, "incidents", id);
 
-
     //sets completed to true and adds a completed time and then merges
     await setDoc(
       updatedData,
@@ -43,8 +45,19 @@ const IncidentList = () => {
   };
 
   //Deletes a specific incident based on its id
-  const toggleDeleteUnsolvedIncident = async (id) => {
-    await deleteDoc(doc(db, "incidents", id));
+  const toggleDeleteUnsolvedIncident = async (incident) => {
+    const incidentId = incident.id;
+    const userId = incident.user;
+
+    
+    const userRef = doc(db, "users", userId);
+
+    //removes the deleted incident
+    await updateDoc(userRef, {
+      ReportedIncidents: arrayRemove(incident.id),
+    });
+
+    await deleteDoc(doc(db, "incidents", incidentId));
     //filters out the deleted document
     refreshData();
   };
@@ -52,6 +65,7 @@ const IncidentList = () => {
   //Deletes a specific incident based on its id and then adds it to the history
   const toggleDelete = async (incident) => {
     const customId = incident.id;
+
     try {
       const incidentRef = doc(db, "history", customId);
 
@@ -72,7 +86,7 @@ const IncidentList = () => {
               text="Pending"
               color="light"
               onToggle={() => setIncidentSolved(incident.id)}
-              onDelete={() => toggleDeleteUnsolvedIncident(incident.id)}
+              onDelete={() => toggleDeleteUnsolvedIncident(incident)}
               printUser={() => console.log(incident.user)}
             />
           )
