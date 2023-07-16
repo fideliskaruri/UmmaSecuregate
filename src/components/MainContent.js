@@ -77,7 +77,7 @@ const MainContent = () => {
       <div
         className={
           signedIn
-            ? show && "grid-container"
+            ? show ? "grid-container": undefined
             : "container-fluid justify-content-center"
         }
       >

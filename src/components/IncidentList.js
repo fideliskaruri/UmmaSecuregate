@@ -9,6 +9,8 @@ import {
   getDocs,
   updateDoc,
   arrayRemove,
+  arrayUnion,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 
@@ -32,8 +34,12 @@ const IncidentList = () => {
   }, []);
 
   //This updated the completed field in the incident object to true depending on its id
-  const setIncidentSolved = async (id) => {
-    const updatedData = doc(db, "incidents", id);
+  const setIncidentSolved = async (incident) => {
+    const incidentId = incident.id;
+    const updatedData = doc(db, "incidents", incidentId);
+    const userId = incident.user;
+
+    const userRef = doc(db, "users", userId);
 
     //sets completed to true and adds a completed time and then merges
     await setDoc(
@@ -41,6 +47,15 @@ const IncidentList = () => {
       { completed: true, timeCompleted: time },
       { merge: true }
     );
+
+    // Update the ReportedIncidents array in the user document
+    const userDocSnap = await getDoc(userRef);
+    const reportedIncidents = userDocSnap.data().ReportedIncidents;
+    const updatedIncidents = reportedIncidents.map((incident) =>
+      incident.id === incidentId ? { ...incident, completed: true } : incident
+    );
+    await updateDoc(userRef, { ReportedIncidents: updatedIncidents });
+
     refreshData();
   };
 
@@ -49,12 +64,11 @@ const IncidentList = () => {
     const incidentId = incident.id;
     const userId = incident.user;
 
-    
     const userRef = doc(db, "users", userId);
 
     //removes the deleted incident
     await updateDoc(userRef, {
-      ReportedIncidents: arrayRemove(incident.id),
+      ReportedIncidents: arrayRemove({ id: incident.id, completed: false }),
     });
 
     await deleteDoc(doc(db, "incidents", incidentId));
@@ -83,9 +97,9 @@ const IncidentList = () => {
             <IncidentTask
               key={incident.id}
               incident={incident}
-              text="Pending"
+              text="Mark Solved"
               color="light"
-              onToggle={() => setIncidentSolved(incident.id)}
+              onToggle={() => setIncidentSolved(incident)}
               onDelete={() => toggleDeleteUnsolvedIncident(incident)}
               printUser={() => console.log(incident.user)}
             />

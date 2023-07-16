@@ -4,25 +4,21 @@ const CurrentUserCard = ({ currentUser }) => {
   const [show, setShow] = useState(false);
   return (
     <div
-      className={`d-flex flex-column text-bg-dark ml-2 mb-3 rounded align-items-start justify-content-center border text  `}
+      className={`d-flex flex-column text-bg-dark ml-2 mb-3 rounded align-items-center justify-content-center border text`}
       style={{
-        height: `${show ? "250px" : "30px"}`,
-        minWidth: "20%",
-        maxWidth: "260px",
-        padding: "10px",
-        position: `${!show ? "absolute" : "relative"}`,
-        top: `${!show && "10px"}`,
-        right: `${!show && "10px"}`,
-        // borderRadius: `${!show && "100px"}`,
+        height: `${show ? "210px" : "27px"}`,
+        width: "300px",
+        position: "absolute",
+        top: "10px",
+        right: "20px",
         cursor: "pointer",
-        marginLeft:"10px"
       }}
       onClickCapture={() => setShow(true)}
-      onTouchEnd={() => setShow(true)}
+      onTouchStartCapture={() => setShow(true)}
     >
       {!show && (
         <div
-          className="d-flex justify-content-start align-items-center"
+          className="d-flex justify-content-center align-items-center"
           style={{ minHeight: "20px" }}
         >
           <img

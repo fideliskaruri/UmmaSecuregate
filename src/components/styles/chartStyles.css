@@ -1,0 +1,8 @@
+.doughnutchart {
+  min-width: 100px;
+  max-width: 150px;
+}
+.barchart {
+  min-width: 150px;
+  max-width: 350px;
+}

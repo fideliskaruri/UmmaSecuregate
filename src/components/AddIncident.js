@@ -33,6 +33,10 @@ const AddIncident = ({ onAdd }) => {
         const incidentRef = doc(db, "incidents", customId);
         const userId = user.uid;
 
+        const ReportedIncidentsData = {
+          id: customId,
+          completed: false,
+        };
         await setDoc(incidentRef, {
           firstname,
           lastname,
@@ -50,7 +54,7 @@ const AddIncident = ({ onAdd }) => {
         await setDoc(
           doc(db, "users", userId),
           {
-            ReportedIncidents: arrayUnion(customId),
+            ReportedIncidents: arrayUnion(ReportedIncidentsData),
           },
           { merge: true }
         );
@@ -135,6 +139,7 @@ const AddIncident = ({ onAdd }) => {
           <option value="Cybersecurity Breach">Cybersecurity Breach</option>
           <option value="Lost or Stolen Items">Lost or Stolen Items</option>
           {/* Add more incident types as needed */}
+          
         </select>
       </div>
 
