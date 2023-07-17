@@ -22,8 +22,8 @@ const BarChart = ({ data, title }) => {
     Tooltip
   );
   return (
-    <div className="barchart">  
-      <Bar data={data} />
+    <div className="barchart">
+      <Bar data={data} height={"350px"} />
     </div>
   );
 };

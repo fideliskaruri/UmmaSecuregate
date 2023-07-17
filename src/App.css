@@ -72,13 +72,25 @@ option {
 }
 .dashboardContainer {
   display: grid;
-  grid-template-columns: minmax(350px, 100%) 1fr 1fr;
+  grid-template-columns: minmax(350px, 550px) minmax(350px, 550px) ;
+  grid-gap: 10px;
+  padding: 0px;
+  margin: 0px;
+  background-color: transparent;
+  height: fit-content;
+}
+.miniContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 10px;
   padding: 0px;
   margin: 0px;
   background-color: transparent;
   height: 100%;
+  max-width: 1200px;
+  min-width: 720px;
 }
+
 .accessPointList {
   height: 100vh !important;
 }

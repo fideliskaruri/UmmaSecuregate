@@ -1,4 +1,4 @@
-import { doc, getDocFromCache, getDocs } from "firebase/firestore";
+import { doc, getDocs } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 
 const incidentCategories = [
@@ -15,8 +15,32 @@ const incidentCategories = [
 ];
 
 export const fetchData = async () => {
-  const userInfo = await getDocs(doc(db, "users"));
-  const incidents = await getDocs(doc(db, "incidents"));
-  const accessPoints = await getDocs(doc(db, "accessPoints"));
-  const history = await getDocs(doc(db, "history"));
+  const userDocs = await getDocs(doc(db, "users"));
+  const incidentDocs = await getDocs(doc(db, "incidents"));
+  const accesspointDocs = await getDocs(doc(db, "accessPoints"));
+  const historyDocs = await getDocs(doc(db, "history"));
+
+  incidentDocs.forEach((incident) => {
+    const incidentType = incident.data().incidentType;
+    const index = incidentCategories.findIndex(
+      (item) => item.category === incidentType
+    );
+    if (index !== -1) {
+      incidentCategories[index].count++;
+    }
+  });
+
+  historyDocs.forEach((history) => {
+    const incidentType = history.data().incidentType;
+    const index = incidentCategories.findIndex(
+      (item) => item.category === incidentType
+    );
+    if (index !== -1) {
+      incidentCategories[index].count++;
+    }
+  });
+
+  return {
+    incidentCategories
+  }
 };

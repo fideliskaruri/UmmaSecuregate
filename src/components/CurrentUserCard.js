@@ -4,13 +4,13 @@ const CurrentUserCard = ({ currentUser }) => {
   const [show, setShow] = useState(false);
   return (
     <div
-      className={`d-flex flex-column text-bg-dark ml-2 mb-3 rounded align-items-center justify-content-center border text`}
+      className={`d-flex flex-column text-bg-dark ml-2 mb-3 rounded  align-items-center justify-content-center border text`}
       style={{
         height: `${show ? "210px" : "27px"}`,
         width: "300px",
-        position: "absolute",
-        top: "10px",
-        right: "20px",
+        position: "fixed",
+        top: `${!show && "10px"}`,
+        right: `${!show && "10px"}`,
         cursor: "pointer",
       }}
       onClickCapture={() => setShow(true)}

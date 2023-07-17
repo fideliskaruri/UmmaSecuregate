@@ -43,6 +43,7 @@ const AddIncident = ({ onAdd }) => {
           registrationNumber,
           incidentDescription,
           title,
+          incidentType,
           date: Date(),
           timeReported: Date.now(),
           completed: false,
@@ -139,7 +140,6 @@ const AddIncident = ({ onAdd }) => {
           <option value="Cybersecurity Breach">Cybersecurity Breach</option>
           <option value="Lost or Stolen Items">Lost or Stolen Items</option>
           {/* Add more incident types as needed */}
-          
         </select>
       </div>
 
