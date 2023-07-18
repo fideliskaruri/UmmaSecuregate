@@ -10,14 +10,17 @@ export const fetchUser = async (uid) => {
     const unsolvedIncidents = [];
 
     //push al the user's reported incidents to array
-    allUserIncidents.push(...thisUser.ReportedIncidents);
-    for (let i = 0; i < allUserIncidents.length; i++) {
-      if (allUserIncidents[i].completed === true) {
-        solvedIncidents.push(allUserIncidents[i].id);
-      } else {
-        unsolvedIncidents.push(allUserIncidents[i].id);
-      }
+    if (thisUser.ReportedIncidents) {
+      allUserIncidents.push(...thisUser.ReportedIncidents);
+         for (let i = 0; i < allUserIncidents.length; i++) {
+           if (allUserIncidents[i].completed === true) {
+             solvedIncidents.push(allUserIncidents[i].id);
+           } else {
+             unsolvedIncidents.push(allUserIncidents[i].id);
+           }
+         }
     }
+ 
     return {
       currentUser: thisUser,
       solved: solvedIncidents,

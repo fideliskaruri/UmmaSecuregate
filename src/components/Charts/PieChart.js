@@ -4,7 +4,7 @@ import { Doughnut, Pie } from "react-chartjs-2";
 // import "./styles/chartStyles.css";
 
 const PieChart = ({ data, title }) => {
-  Chart.register( Tooltip);
+  Chart.register( ArcElement,Tooltip);
   return (
     <>
       <div className="doughnutchart">

@@ -70,9 +70,10 @@ option {
   background-color: transparent;
   height: 100%;
 }
+
 .dashboardContainer {
   display: grid;
-  grid-template-columns: minmax(350px, 550px) minmax(350px, 550px) ;
+  grid-template-columns: 2fr 1fr;
   grid-gap: 10px;
   padding: 0px;
   margin: 0px;
@@ -81,14 +82,21 @@ option {
 }
 .miniContainer {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 2fr;
   grid-gap: 10px;
   padding: 0px;
   margin: 0px;
   background-color: transparent;
-  height: 100%;
-  max-width: 1200px;
-  min-width: 720px;
+  height: fit-content;
+}
+.miniContainer2 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-gap: 10px;
+  padding: 0px;
+  margin: 0px;
+  background-color: transparent;
+  height: fit-content;
 }
 
 .accessPointList {
@@ -106,6 +114,30 @@ option {
 }
 /* .mainContainer::-webkit-scrollbar {
   width: 0px;
+} */
+
+.generateReportsPage {
+  overflow-y: scroll;
+  height: 90vh;
+  padding-right: 10px;
+}
+
+.generateReportsPage::-webkit-scrollbar {
+  border-radius: 3px;
+  width: 10px;
+  color: black;
+  background-color: grey;
+}
+/* .dashboard {
+  overflow-y: scroll;
+  padding-right: 10px;
+}
+
+.dashboard::-webkit-scrollbar {
+  border-radius: 3px;
+  width: 10px;
+  color: black;
+  background-color: grey;
 } */
 @media (min-width: 200px) and (max-width: 720px) {
   .mainContainer {

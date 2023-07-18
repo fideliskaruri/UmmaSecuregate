@@ -1,7 +1,11 @@
 .doughnutchart {
-  width: 200px;
+  width: 150px;
 }
 .barchart {
-  width: 250px;
+  padding: 5px;
   height: 250px;
+}
+
+.linechart{
+  height: 240px;
 }

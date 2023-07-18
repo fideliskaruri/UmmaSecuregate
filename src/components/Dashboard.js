@@ -7,7 +7,14 @@ import BarChart from "./Charts/BarChart";
 import DoughnutChart from "./Charts/DoughnutChart";
 import { fetchUser } from "./fetchUser";
 import InfoCard from "./InfoCard";
+import {
+  getAllIncidentInfo,
+  getGuardData,
+  getIncidentData,
+  getUserData,
+} from "../data/Data";
 import PieChart from "./Charts/PieChart";
+import LineChart from "./Charts/LIneChart";
 
 const Dashboard = () => {
   const { user } = UserAuth();
@@ -15,10 +22,16 @@ const Dashboard = () => {
   const [solved, setSolved] = useState([]);
   const [unsolved, setUnsolved] = useState([]);
   const [allUserIncidents, setAllUserIncidents] = useState([]);
+  const [incidentData, setIncidentData] = useState({});
+  const [allIncidentInfo, setAllIncidentInfo] = useState({});
+  const [guardData, setGuardData] = useState({});
+  const [guardRoles, setGuardRoles] = useState({});
   const allIncidents = allUserIncidents.length;
 
   useEffect(() => {
     fetchUserData();
+    fetchGuardData();
+    fetchIncidentData();
   }, []);
 
   const fetchUserData = async () => {
@@ -29,6 +42,21 @@ const Dashboard = () => {
     setAllUserIncidents(userData.allUserIncidents);
   };
 
+  const fetchIncidentData = async () => {
+    const data = await getIncidentData();
+    const incidentInfoData = await getAllIncidentInfo();
+
+    setAllIncidentInfo(incidentInfoData)
+    setIncidentData(data);
+    console.log("incident data" + JSON.stringify(incidentData));
+  };
+
+  const fetchGuardData = async () => {
+    const data = await getGuardData();
+    const guardRolesData = await getUserData();
+    setGuardRoles(guardRolesData);
+    setGuardData(data);
+  };
   return (
     <div className="dashboard">
       {currentUser ? (
@@ -40,14 +68,14 @@ const Dashboard = () => {
               children={
                 <>
                   <CurrentUserCard currentUser={currentUser} />
-                  <DoughnutChart
+                  <PieChart
                     data={{
                       labels: ["Solved", "Unsolved"],
                       datasets: [
                         {
                           data: [
-                            (solved.length / allIncidents) * 100,
-                            (unsolved.length / allIncidents) * 100,
+                            Math.floor((solved.length / allIncidents) * 100),
+                            Math.floor((unsolved.length / allIncidents) * 100),
                           ],
                           backgroundColor: ["rgb(198, 219, 226)", "#BAA1E4"],
                         },
@@ -68,8 +96,9 @@ const Dashboard = () => {
                     }}
                   />
                   <BarChart
+                  width={"500px"}
                     data={{
-                      labels: ["Solved", "Unsolved", "All Incidents"],
+                      labels: ["Solved", "Unsolved", "Total"],
                       datasets: [
                         {
                           data: [solved.length, unsolved.length, allIncidents],
@@ -89,40 +118,17 @@ const Dashboard = () => {
               title={"All Incidents Reported"}
               children={
                 <>
-                  <DoughnutChart
+                  <BarChart
+                    width={"600px"}
                     data={{
-                      labels: [
-                        "Solved",
-                        "Unsolved",
-                        "All Incidents",
-                        "Archived",
-                      ],
+                      labels: ["Solved", "Unsolved", "Archived", "Total"],
                       datasets: [
                         {
                           data: [
-                            solved.length,
-                            unsolved.length,
-                            allIncidents,
-                            allIncidents,
-                          ],
-                          backgroundColor: [
-                            "rgb(198, 219, 226)",
-                            "#BAA1E4",
-                            "rgb(221, 160, 221)",
-                            "#39527E",
-                          ],
-                        },
-                      ],
-                    }}
-                  />
-                  <DoughnutChart
-                    data={{
-                      labels: ["Solved", "Unsolved"],
-                      datasets: [
-                        {
-                          data: [
-                            (solved.length / allIncidents) * 100,
-                            (unsolved.length / allIncidents) * 100,
+                            allIncidentInfo.unsolved,
+                            allIncidentInfo.solved,
+                            allIncidentInfo.archived,
+                            allIncidentInfo.Total,
                           ],
                           backgroundColor: ["rgb(198, 219, 226)", "#BAA1E4"],
                         },
@@ -136,15 +142,38 @@ const Dashboard = () => {
           <div className="miniContainer">
             <InfoCard
               title={"Guards"}
-              minWidth={"250px"}
+              minWidth={"max-content"}
               children={
                 <>
                   <BarChart
                     data={{
-                      labels: ["Solved", "Unsolved", "All Incidents"],
+                      labels: ["Assigned", "Unassigned", "Total"],
                       datasets: [
                         {
-                          data: [solved.length, unsolved.length, allIncidents],
+                          data: [
+                            guardData.Assigned,
+                            guardData.Unassigned,
+                            guardData.Total,
+                          ],
+                          backgroundColor: [
+                            "rgb(198, 219, 226)",
+                            "#BAA1E4",
+                            "rgb(221, 160, 221)",
+                          ],
+                        },
+                      ],
+                    }}
+                  />{" "}
+                  <BarChart
+                    data={{
+                      labels: ["Admins", "Guards", "Supervisors"],
+                      datasets: [
+                        {
+                          data: [
+                            guardRoles.Admin,
+                            guardRoles.Guard,
+                            guardRoles.Supervisor,
+                          ],
                           backgroundColor: [
                             "rgb(198, 219, 226)",
                             "#BAA1E4",
@@ -154,22 +183,29 @@ const Dashboard = () => {
                       ],
                     }}
                   />
-                  <BarChart
-                    data={{
-                      labels: ["Solved", "Unsolved", "All Incidents"],
-                      datasets: [
-                        {
-                          data: [solved.length, unsolved.length, allIncidents],
-                          backgroundColor: [
-                            "rgb(123, 193, 126)",
-                            "rgb(255, 105, 50) ",
-                            "rgb(200, 255, 27) ",
-                          ],
-                        },
-                      ],
-                    }}
-                  />
                 </>
+              }
+            />
+            <InfoCard
+              title={"Within the last week"}
+              children={
+                <LineChart
+                  width={"400px"}
+                  data={{
+                    labels: Object.keys(incidentData),
+                    datasets: [
+                      {
+                        label: "Incidents",
+                        data: Object.values(incidentData).map(
+                          (day) => day.count
+                        ),
+                        backgroundColor: "rgba(255, 99, 132, 0.2)",
+                        borderColor: "rgba(255,99,132,1)",
+                        borderWidth: 1,
+                      },
+                    ],
+                  }}
+                />
               }
             />
           </div>

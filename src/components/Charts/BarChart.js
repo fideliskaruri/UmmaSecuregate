@@ -1,8 +1,6 @@
 import React from "react";
 import {
   Chart,
-  DoughnutController,
-  ArcElement,
   Tooltip,
   CategoryScale,
   LinearScale,
@@ -11,19 +9,17 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 
-const BarChart = ({ data, title }) => {
+const BarChart = ({ data, width }) => {
   Chart.register(
-    DoughnutController,
     BarController,
     BarElement,
-    ArcElement,
     CategoryScale,
     LinearScale,
     Tooltip
   );
   return (
     <div className="barchart">
-      <Bar data={data} height={"350px"} />
+      <Bar data={data} height={"350px"} width={width} />
     </div>
   );
 };
