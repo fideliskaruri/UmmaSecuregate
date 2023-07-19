@@ -52,7 +52,25 @@ const MainContent = () => {
 
     // Set the loading state to false after checking the user
     setLoading(false);
-  }, []);
+
+    //handling when to show the sidebar depending on the screen size
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        // Change the breakpoint as per your requirements
+        setShow(true);
+      } else if (window.innerWidth <= 720) {
+        setShow(false);
+      }
+    };
+
+    // Add event listener for window resize
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  });
 
   return (
     <>
@@ -72,7 +90,16 @@ const MainContent = () => {
             </>
           )}
 
-          <aside className="maincontent" onTouchEnd={() => setShow(false)}>
+          <aside
+            className="maincontent"
+            onClickCapture={() => {
+              if (window.innerWidth <= 600) {
+                setShow(false);
+              } else {
+                setShow(show);
+              }
+            }}
+          >
             {signedIn && (
               <div
                 className=" btn btn-sm btn-dark border rounded hidebtn"
@@ -85,7 +112,7 @@ const MainContent = () => {
                   // height:"30px"
                   // backgroundColor:"red",
                 }}
-                onClick={() => setShow(!show)}
+                onClickCapture={() => setShow(!show)}
               >
                 <CiMenuFries />
                 {/* <Button
@@ -95,17 +122,18 @@ const MainContent = () => {
                 /> */}
               </div>
             )}
+
             <div className="mt-3">
               <Routes>
                 <Route
                   path="/"
                   element={
-                    loading ? (
+                    signedIn ? (
+                      <Navigate to={"/dashboard"} />
+                    ) : loading ? (
                       <LoadingScreen />
-                    ) : !signedIn ? (
-                      <Login />
                     ) : (
-                      <Navigate to="/dashboard" />
+                      <Login />
                     )
                   }
                 />
@@ -115,38 +143,55 @@ const MainContent = () => {
                 />
                 <Route
                   path="/usermanagement"
-                  element={signedIn && <UserManagement />}
+                  element={
+                    signedIn ? <UserManagement /> : <Navigate to={"/"} />
+                  }
                 />
                 <Route
                   path="usermanagement/admin"
                   element={
-                    signedIn && isAdmin ? (
-                      <Admin />
+                    signedIn ? (
+                      isAdmin ? (
+                        <Admin />
+                      ) : (
+                        <Navigate to="/usermanagement" />
+                      )
                     ) : (
-                      <Navigate to="/usermanagement" />
+                      <Navigate to={"/"} />
                     )
                   }
                 />
-                <Route path="/History" element={signedIn && <History />} />
+                <Route
+                  path="/History"
+                  element={signedIn ? <History /> : <Navigate to={"/"} />}
+                />
                 <Route
                   path="/accesslogs"
-                  element={signedIn && <AccessLogs />}
+                  element={signedIn ? <AccessLogs /> : <Navigate to={"/"} />}
                 />
                 <Route
                   path="/accesspoints"
-                  element={signedIn && <AccessPointList />}
+                  element={
+                    signedIn ? <AccessPointList /> : <Navigate to={"/"} />
+                  }
                 />
                 <Route
                   path="/generatereports"
-                  element={signedIn && <GenerateReports />}
+                  element={
+                    signedIn ? <GenerateReports /> : <Navigate to={"/"} />
+                  }
                 />
                 <Route
                   path="/helpandsupport"
-                  element={signedIn && <HelpAndSupport />}
+                  element={
+                    signedIn ? <HelpAndSupport /> : <Navigate to={"/"} />
+                  }
                 />
                 <Route
                   path="/securityincidents"
-                  element={signedIn && <SecurityIncidents />}
+                  element={
+                    signedIn ? <SecurityIncidents /> : <Navigate to={"/"} />
+                  }
                 />
               </Routes>
             </div>

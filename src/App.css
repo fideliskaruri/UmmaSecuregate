@@ -240,7 +240,7 @@ option {
 
 .maincontent {
   padding: 30px 10px 0px 20px;
-  height: fit-content;
+  height: 100%;
   width: 100%;
 }
 

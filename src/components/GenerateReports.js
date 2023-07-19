@@ -127,7 +127,7 @@ const GenerateReports = () => {
     fetchUnsolvedAndSolvedBasedOnType();
     fetchAverageTimeData();
     fetchTotalTimeData();
-  }, []);
+  }, [isMobile]);
 
   return (
     <div className="generateReportsPage">
