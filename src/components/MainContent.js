@@ -21,7 +21,6 @@ import { useEffect, useState } from "react";
 import { UserAuth } from "../context/AuthContext";
 import AccessPointList from "./AccessPointList";
 import Button from "./Button";
-import { isMobile } from "mobile-device-detect";
 
 const MainContent = () => {
   const [isAdmin, setIsAdmin] = useState(false);
