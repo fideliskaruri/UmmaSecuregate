@@ -173,7 +173,7 @@ const GenerateReports = () => {
           />
         </div>
       )}
-      <div className="miniContainer2">
+      <div className="miniContainer">
         {averageTimeData && (
           <InfoCard
             title={"Average Time Taken to Solve/Resolve a Reported Incident "}
