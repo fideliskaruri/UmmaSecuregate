@@ -3,7 +3,7 @@ const InfoCard = ({ children, color, title, minWidth }) => {
     <div>
       <h6>{title}</h6>
       <div
-        className="d-flex align-items-center justify-content-between p-3 text-bg-dark  mb-3  rounded   "
+        className="d-flex align-items-center justify-content-around p-3 text-bg-dark  mb-3  rounded   "
         style={{
           // backgroundColor: "rgb(26,31,31)",
           height: "250px",

@@ -41,7 +41,7 @@ const MainContent = () => {
           checkAdmin().then((result) => setIsAdmin(result));
           setSignedIn(true);
         } else {
-          setSignedIn(false);
+          setSignedIn(false); 
         }
       } catch (error) {
         console.error(error);
@@ -58,7 +58,7 @@ const MainContent = () => {
       if (window.innerWidth >= 768) {
         // Change the breakpoint as per your requirements
         setShow(true);
-      } else if (window.innerWidth <= 720) {
+      } else {
         setShow(false);
       }
     };
@@ -122,76 +122,55 @@ const MainContent = () => {
                 /> */}
               </div>
             )}
-
             <div className="mt-3">
               <Routes>
                 <Route
                   path="/"
                   element={
-                    signedIn ? (
-                      <Navigate to={"/dashboard"} />
-                    ) : loading ? (
+                    loading ? (
                       <LoadingScreen />
-                    ) : (
+                    ) : !signedIn ? (
                       <Login />
+                    ) : (
+                      <Navigate to="/dashboard" />
                     )
                   }
                 />
-                <Route
-                  path="/dashboard"
-                  element={signedIn ? <Dashboard /> : <Navigate to={"/"} />}
-                />
+                <Route path="/dashboard" element={signedIn && <Dashboard />} />
                 <Route
                   path="/usermanagement"
-                  element={
-                    signedIn ? <UserManagement /> : <Navigate to={"/"} />
-                  }
+                  element={signedIn && <UserManagement />}
                 />
                 <Route
                   path="usermanagement/admin"
                   element={
-                    signedIn ? (
-                      isAdmin ? (
-                        <Admin />
-                      ) : (
-                        <Navigate to="/usermanagement" />
-                      )
+                    signedIn && isAdmin ? (
+                      <Admin />
                     ) : (
-                      <Navigate to={"/"} />
+                      <Navigate to="/usermanagement" />
                     )
                   }
                 />
-                <Route
-                  path="/History"
-                  element={signedIn ? <History /> : <Navigate to={"/"} />}
-                />
+                <Route path="/History" element={signedIn && <History />} />
                 <Route
                   path="/accesslogs"
-                  element={signedIn ? <AccessLogs /> : <Navigate to={"/"} />}
+                  element={signedIn && <AccessLogs />}
                 />
                 <Route
                   path="/accesspoints"
-                  element={
-                    signedIn ? <AccessPointList /> : <Navigate to={"/"} />
-                  }
+                  element={signedIn && <AccessPointList />}
                 />
                 <Route
                   path="/generatereports"
-                  element={
-                    signedIn ? <GenerateReports /> : <Navigate to={"/"} />
-                  }
+                  element={signedIn && <GenerateReports />}
                 />
                 <Route
                   path="/helpandsupport"
-                  element={
-                    signedIn ? <HelpAndSupport /> : <Navigate to={"/"} />
-                  }
+                  element={signedIn && <HelpAndSupport />}
                 />
                 <Route
                   path="/securityincidents"
-                  element={
-                    signedIn ? <SecurityIncidents /> : <Navigate to={"/"} />
-                  }
+                  element={signedIn && <SecurityIncidents />}
                 />
               </Routes>
             </div>
