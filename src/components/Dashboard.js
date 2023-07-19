@@ -156,7 +156,7 @@ const Dashboard = () => {
               children={
                 <>
                   <BarChart
-                    width={isMobile ? "200px" : "500px"}
+                    width={isMobile ? "200px" : "350px"}
                     data={{
                       labels: ["Assigned", "Unassigned", "Total"],
                       datasets: [
@@ -174,7 +174,7 @@ const Dashboard = () => {
                     }}
                   />
                   <BarChart
-                    width={isMobile ? "200px" : "500px"}
+                    width={isMobile ? "200px" : "350px"}
                     data={{
                       labels: ["Admins", "Guards", "Supervisors"],
                       datasets: [

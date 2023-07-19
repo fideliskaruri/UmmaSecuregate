@@ -84,7 +84,6 @@ option {
   margin: 0px;
   background-color: transparent;
   height: fit-content;
-
 }
 .miniContainer {
   display: grid;
@@ -135,18 +134,17 @@ option {
   background-color: grey;
 }
 
-
 @media (min-width: 200px) and (max-width: 720px) {
   .dashboardContainer {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  grid-gap: 10px;
-  padding: 0px;
-  margin: 0px;
-  background-color: transparent;
-  height: fit-content;
-}
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    grid-gap: 10px;
+    padding: 0px;
+    margin: 0px;
+    background-color: transparent;
+    height: fit-content;
+  }
   .mainContainer {
     display: grid;
     grid-template-columns: 1fr;
@@ -156,23 +154,23 @@ option {
     margin: 0px;
   }
   .miniContainer {
-  display: grid;
-  grid-template-columns: 1fr ;
-  grid-gap: 10px;
-  padding: 0px;
-  margin: 0px;
-  background-color: transparent;
-  height: fit-content;
-}
-.miniContainer2 {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-gap: 10px;
-  padding: 0px;
-  margin: 0px;
-  background-color: transparent;
-  height: fit-content;
-}
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+    padding: 0px;
+    margin: 0px;
+    background-color: transparent;
+    height: fit-content;
+  }
+  .miniContainer2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+    padding: 0px;
+    margin: 0px;
+    background-color: transparent;
+    height: fit-content;
+  }
   .logo {
     width: 120px;
     padding-bottom: 20px;
@@ -318,7 +316,8 @@ button {
 }
 
 .listarea::-webkit-scrollbar {
-  width: 0px; /* Width of the scrollbar */
+  background-color: white;
+  width: 8px; /* Width of the scrollbar */
 }
 
 .footer {
