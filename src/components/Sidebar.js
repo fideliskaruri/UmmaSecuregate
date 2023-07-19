@@ -21,6 +21,7 @@ const Sidebar = ({ showSidebar }) => {
   const { saveAccessLog, user } = UserAuth();
   const { checkAdmin } = UserAuth();
   const location = useLocation().pathname;
+  const [show, setShow] = useState(false);
   useEffect(() => {
     checkAdmin().then((result) => setIsAdmin(result));
   });
@@ -84,9 +85,10 @@ const Sidebar = ({ showSidebar }) => {
 
   return (
     <>
-      <ul className="sidebar text-bg-dark ">
+     
+      <ul className="sidebar text-bg-dark " style={{ zIndex: "2" }}>
         <li className="logocontainer">
-          <Link to="/dashboard" >
+          <Link to="/dashboard">
             <Logo className="logo" />
           </Link>
         </li>

@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
-import { collection, addDoc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { UserAuth } from "../context/AuthContext";
 
@@ -9,6 +15,7 @@ const HelpAndSupport = () => {
   const [faqs, setFaqs] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [show, setShow] = useState(false);
 
   const { checkAdmin } = UserAuth();
 
@@ -39,15 +46,32 @@ const HelpAndSupport = () => {
     }
   };
 
-  return (
-    <div className="container">
-      <h1 className="my-3">Help and Support</h1>
-      <h2 className="my-3">FAQs</h2>
+  const toggleDelete = async (id) => {
+    await deleteDoc(doc(db, "faqs", id));
+  };
+
+  return (<>
+      <h2 className="my-3">Help and Support</h2>
+      <h3 className="my-3">FAQs</h3>
       <ul className="list-group mb-3">
         {faqs.map((faq) => (
-          <li key={faq.id} className="list-group-item">
-            <h3>{faq.question}</h3>
-            <p>{faq.answer}</p> 
+          <li
+            key={faq.id}
+            className="list-group-item"
+            onClick={() => setShow(!show)}
+          >
+            <div className="d-flex justify-content-between">
+              <h5 className="text-dark">{faq.question}</h5>
+              {isAdmin && (
+                <input
+                  className="btn btn-sm btn-outline-danger"
+                  value={"Delete"}
+                  onChange={()=>{}}
+                  onClick={() => toggleDelete(faq.id)}
+                />
+              )}
+            </div>
+            <h6 className="text-muted">{faq.answer}</h6>
           </li>
         ))}
       </ul>
@@ -91,7 +115,7 @@ const HelpAndSupport = () => {
           )}
         </>
       )}
-    </div>
+    </>
   );
 };
 

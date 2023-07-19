@@ -1,7 +1,15 @@
-import { collection, onSnapshot } from "firebase/firestore";
+import {
+  arrayRemove,
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  updateDoc,
+} from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import IncidentTask from "./IncidentTask";
 import { db } from "../firebaseConfig";
+import HistoryTask from "./HistoryTask";
 
 const History = () => {
   const [history, setHistory] = useState([]);
@@ -23,14 +31,34 @@ const History = () => {
     refreshData();
   }, []);
 
+  //Deletes a specific incident based on its id
+  const toggleDeleteHistory = async (incident) => {
+    const incidentId = incident.id;
+    const userId = incident.user;
 
-  //Triggers an alert to tell the user that only the admin can delete the history
-  const triggerAlert = () => {
-    console.log("only the admin can delete the history")
-  }
+    const userRef = doc(db, "users", userId);
+
+    //removes the deleted incident
+    await updateDoc(userRef, {
+      ReportedIncidents: arrayRemove({ id: incident.id, completed: true }),
+    });
+
+    await deleteDoc(doc(db, "history", incidentId));
+    //filters out the deleted document
+    refreshData();
+  };
+
   return (
     <div className="historyPage ">
-     {history.map((i) => <IncidentTask key={i.id} text={"History"} incident={i} onDelete={triggerAlert} color={"warning"} /> )}
+      {history.map((i) => (
+        <HistoryTask
+          key={i.id}
+          text={"History"}
+          incident={i}
+          onDelete={() => toggleDeleteHistory(i)}
+          color={"warning"}
+        />
+      ))}
     </div>
   );
 };

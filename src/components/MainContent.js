@@ -21,12 +21,13 @@ import { useEffect, useState } from "react";
 import { UserAuth } from "../context/AuthContext";
 import AccessPointList from "./AccessPointList";
 import Button from "./Button";
+import { isMobile } from "mobile-device-detect";
 
 const MainContent = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [signedIn, setSignedIn] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
 
   const { user, checkAdmin } = UserAuth();
 
@@ -52,32 +53,16 @@ const MainContent = () => {
 
     // Set the loading state to false after checking the user
     setLoading(false);
-
-    //handling when to show the sidebar depending on the screen size
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        // Change the breakpoint as per your requirements
-        setShow(true);
-      } else {
-        setShow(false);
-      }
-    };
-
-    // Add event listener for window resize
-    window.addEventListener("resize", handleResize);
-
-    // Clean up the event listener on component unmount
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  });
+  }, []);
 
   return (
     <>
       <div
         className={
           signedIn
-            ? show ? "grid-container": undefined
+            ? show
+              ? "grid-container"
+              : undefined
             : "container-fluid justify-content-center"
         }
       >
@@ -88,7 +73,7 @@ const MainContent = () => {
             </>
           )}
 
-          <aside className="maincontent">
+          <aside className="maincontent" onTouchEnd={() => setShow(false)}>
             {signedIn && (
               <div
                 className=" btn btn-sm btn-dark border rounded hidebtn"
@@ -125,7 +110,10 @@ const MainContent = () => {
                     )
                   }
                 />
-                <Route path="/dashboard" element={signedIn && <Dashboard />} />
+                <Route
+                  path="/dashboard"
+                  element={signedIn ? <Dashboard /> : <Navigate to={"/"} />}
+                />
                 <Route
                   path="/usermanagement"
                   element={signedIn && <UserManagement />}

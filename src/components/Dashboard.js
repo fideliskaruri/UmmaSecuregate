@@ -15,6 +15,7 @@ import {
 } from "../data/Data";
 import PieChart from "./Charts/PieChart";
 import LineChart from "./Charts/LIneChart";
+import { isMobile } from "mobile-device-detect";
 
 const Dashboard = () => {
   const { user } = UserAuth();
@@ -27,6 +28,15 @@ const Dashboard = () => {
   const [guardData, setGuardData] = useState({});
   const [guardRoles, setGuardRoles] = useState({});
   const allIncidents = allUserIncidents.length;
+
+  const colors = [
+    "rgba(255, 99, 132, 0.4)",
+    "rgba(54, 162, 235, 0.4)",
+    "rgba(255, 206, 86, 0.4)",
+    "rgba(75, 192, 192, 0.4)",
+    "rgba(153, 102, 255, 0.4)",
+    "rgba(255, 159, 64, 0.4)",
+  ];
 
   useEffect(() => {
     fetchUserData();
@@ -46,7 +56,7 @@ const Dashboard = () => {
     const data = await getIncidentData();
     const incidentInfoData = await getAllIncidentInfo();
 
-    setAllIncidentInfo(incidentInfoData)
+    setAllIncidentInfo(incidentInfoData);
     setIncidentData(data);
     console.log("incident data" + JSON.stringify(incidentData));
   };
@@ -58,7 +68,7 @@ const Dashboard = () => {
     setGuardData(data);
   };
   return (
-    <div className="dashboard">
+    <div className="listarea">
       {currentUser ? (
         <>
           <div className="dashboardContainer">
@@ -68,7 +78,8 @@ const Dashboard = () => {
               children={
                 <>
                   <CurrentUserCard currentUser={currentUser} />
-                  <PieChart
+                  <DoughnutChart
+                    width={isMobile ? "100px" : "150px"}
                     data={{
                       labels: ["Solved", "Unsolved"],
                       datasets: [
@@ -77,7 +88,7 @@ const Dashboard = () => {
                             Math.floor((solved.length / allIncidents) * 100),
                             Math.floor((unsolved.length / allIncidents) * 100),
                           ],
-                          backgroundColor: ["rgb(198, 219, 226)", "#BAA1E4"],
+                          backgroundColor: colors,
                         },
                       ],
                     }}
@@ -96,17 +107,15 @@ const Dashboard = () => {
                     }}
                   />
                   <BarChart
-                  width={"500px"}
+                    width={isMobile ? "290px" : "500px"}
                     data={{
                       labels: ["Solved", "Unsolved", "Total"],
                       datasets: [
                         {
                           data: [solved.length, unsolved.length, allIncidents],
-                          backgroundColor: [
-                            "rgb(198, 219, 226)",
-                            "#BAA1E4",
-                            "rgb(221, 160, 221)",
-                          ],
+                          backgroundColor: colors,
+                          borderColor: "#fff",
+                          borderWidth: 1,
                         },
                       ],
                     }}
@@ -119,7 +128,7 @@ const Dashboard = () => {
               children={
                 <>
                   <BarChart
-                    width={"600px"}
+                    width={isMobile ? "350px" : "500px"}
                     data={{
                       labels: ["Solved", "Unsolved", "Archived", "Total"],
                       datasets: [
@@ -130,7 +139,9 @@ const Dashboard = () => {
                             allIncidentInfo.archived,
                             allIncidentInfo.Total,
                           ],
-                          backgroundColor: ["rgb(198, 219, 226)", "#BAA1E4"],
+                          backgroundColor: colors,
+                          borderColor: "#fff",
+                          borderWidth: 1,
                         },
                       ],
                     }}
@@ -142,10 +153,10 @@ const Dashboard = () => {
           <div className="miniContainer">
             <InfoCard
               title={"Guards"}
-              minWidth={"max-content"}
               children={
                 <>
                   <BarChart
+                    width={isMobile ? "200px" : "500px"}
                     data={{
                       labels: ["Assigned", "Unassigned", "Total"],
                       datasets: [
@@ -155,16 +166,15 @@ const Dashboard = () => {
                             guardData.Unassigned,
                             guardData.Total,
                           ],
-                          backgroundColor: [
-                            "rgb(198, 219, 226)",
-                            "#BAA1E4",
-                            "rgb(221, 160, 221)",
-                          ],
+                          backgroundColor: colors,
+                          borderColor: "#fff",
+                          borderWidth: 1,
                         },
                       ],
                     }}
-                  />{" "}
+                  />
                   <BarChart
+                    width={isMobile ? "200px" : "500px"}
                     data={{
                       labels: ["Admins", "Guards", "Supervisors"],
                       datasets: [
@@ -174,11 +184,9 @@ const Dashboard = () => {
                             guardRoles.Guard,
                             guardRoles.Supervisor,
                           ],
-                          backgroundColor: [
-                            "rgb(198, 219, 226)",
-                            "#BAA1E4",
-                            "rgb(221, 160, 221)",
-                          ],
+                          backgroundColor: colors,
+                          borderColor: "#fff",
+                          borderWidth: 1,
                         },
                       ],
                     }}
@@ -190,7 +198,7 @@ const Dashboard = () => {
               title={"Within the last week"}
               children={
                 <LineChart
-                  width={"400px"}
+                  width={isMobile ? "200px" : "500px"}
                   data={{
                     labels: Object.keys(incidentData),
                     datasets: [
@@ -199,8 +207,8 @@ const Dashboard = () => {
                         data: Object.values(incidentData).map(
                           (day) => day.count
                         ),
-                        backgroundColor: "rgba(255, 99, 132, 0.2)",
-                        borderColor: "rgba(255,99,132,1)",
+                        backgroundColor: colors,
+                        borderColor: "#fff",
                         borderWidth: 1,
                       },
                     ],

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { UserAuth } from "../context/AuthContext";
 import Button from "./Button";
 
-const IncidentTask = ({
+const HistoryTask = ({
   incident,
   onToggle,
   text,
@@ -10,13 +10,11 @@ const IncidentTask = ({
   onDelete,
   printUser,
 }) => {
-  const [visible, setVisible] = useState(false);
-  const { user } = UserAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const { checkAdmin } = UserAuth();
 
   useEffect(() => {
-    if (user.uid === incident.user) {
-      setVisible(true);
-    }
+    checkAdmin().then((result) => setIsAdmin(result));
   }, []);
   return (
     <>
@@ -32,9 +30,8 @@ const IncidentTask = ({
           <h6 className="card-title ">{incident.title}</h6>
           <p className="card-text">{incident.incidentDescription}</p>
         </div>
-        {visible && (
+        {isAdmin && (
           <div className="card-body">
-            <Button onClick={onToggle} color={`${color}`} text={text} />
             <Button onClick={onDelete} color="outline-danger" text="Delete" />
           </div>
         )}
@@ -43,4 +40,4 @@ const IncidentTask = ({
   );
 };
 
-export default IncidentTask;
+export default HistoryTask;

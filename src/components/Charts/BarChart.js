@@ -9,7 +9,7 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 
-const BarChart = ({ data, width }) => {
+const BarChart = ({ data, width, title, options }) => {
   Chart.register(
     BarController,
     BarElement,
@@ -19,7 +19,7 @@ const BarChart = ({ data, width }) => {
   );
   return (
     <div className="barchart">
-      <Bar data={data} height={"350px"} width={width} />
+      <Bar data={data} height={"350px"} width={width} options={options} />
     </div>
   );
 };

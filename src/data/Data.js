@@ -1,138 +1,167 @@
-import { collection, doc, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 
-const incidentCategories = [
-  { category: "Theft or Burglary", count: 0 },
-  { category: "Vandalism", count: 0 },
-  { category: "Assault or Physical Altercation", count: 0 },
-  { category: "Harassment or Threats", count: 0 },
-  { category: "Property Damage", count: 0 },
-  { category: "Fire or Smoke Incident", count: 0 },
-  { category: "Medical Emergency", count: 0 },
-  { category: "Suspicious Activity or Persons", count: 0 },
-  { category: "Cybersecurity Breach", count: 0 },
-  { category: "Lost or Stolen Items", count: 0 },
-];
+export const getCollectionData = async (collectionName) => {
+  try {
+    const snapshot = await getDocs(collection(db, collectionName));
+    return snapshot.docs.map((doc) => doc.data());
+  } catch (error) {
+    console.error(`Error fetching data from ${collectionName}:`, error);
+    throw error;
+  }
+};
 
-//organizes incidents data by date
+const INCIDENT_COLLECTION = "incidents";
+const HISTORY_COLLECTION = "history";
+
 export const getIncidentData = async () => {
-  const incidentDocs = await getDocs(collection(db, "incidents"));
-  const incidentData = {};
+  const incidentData = await getCollectionData(INCIDENT_COLLECTION);
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-  incidentDocs.forEach((incident) => {
-    const incidentDate = new Date(incident.data().timeReported);
+  const organizedData = {};
+  incidentData.forEach((incident) => {
+    const incidentDate = new Date(incident.timeReported);
     if (incidentDate >= oneWeekAgo) {
       const date = incidentDate.toLocaleDateString("en-US", {
         weekday: "short",
       });
-      if (incidentData.hasOwnProperty(date)) {
-        incidentData[date].count++;
-        incidentData[date].incidents.push(incident.data());
+      if (organizedData.hasOwnProperty(date)) {
+        organizedData[date].count++;
+        organizedData[date].incidents.push(incident);
       } else {
-        incidentData[date] = {
+        organizedData[date] = {
           count: 1,
-          incidents: [incident.data()],
+          incidents: [incident],
         };
       }
     }
   });
 
-  return incidentData;
+  return organizedData;
 };
 
-//organizes incidents data by date
-export const getIncidentDataOverTime = async () => {
-  const incidentDocs = await getDocs(collection(db, "incidents"));
-  const incidentData = {};
-  const oneWeekAgo = new Date();
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-  incidentDocs.forEach((incident) => {
-    const incidentDate = new Date(incident.data().timeReported);
-    if (incidentDate >= oneWeekAgo) {
-      const date = incidentDate.toLocaleDateString("en-US", {
-        weekday: "short",
-      });
-      if (incidentData.hasOwnProperty(date)) {
-        incidentData[date].count++;
-        incidentData[date].incidents.push(incident.data());
-      } else {
-        incidentData[date] = {
-          count: 1,
-          incidents: [incident.data()],
-        };
-      }
-    }
-  });
-
-  return incidentData;
-};
-
-//users are organized by their role
 export const getUserData = async () => {
-  const userDocs = await getDocs(collection(db, "users"));
-  const userData = {
+  const userData = await getCollectionData("users");
+  const organizedData = {
     Admin: 0,
     Supervisor: 0,
     Guard: 0,
   };
 
-  userDocs.forEach((user) => {
-    const role = user.data().role;
-    if (userData.hasOwnProperty(role)) {
-      userData[role]++;
+  userData.forEach((user) => {
+    const role = user.role;
+    if (organizedData.hasOwnProperty(role)) {
+      organizedData[role]++;
     }
   });
 
-  return userData;
+  return organizedData;
 };
 
-//users are organized by their role
 export const getGuardData = async () => {
-  const guardDocs = await getDocs(collection(db, "users"));
-  const guardData = {
+  const guardData = await getCollectionData("users");
+  const organizedData = {
     Total: 0,
     Assigned: 0,
     Unassigned: 0,
   };
 
-  guardDocs.forEach((user) => {
-    const Assigned = user.data().assigned;
-    guardData["Total"]++;
-    if (Assigned) {
-      guardData["Assigned"]++;
+  guardData.forEach((user) => {
+    const isAssigned = user.assigned;
+    organizedData["Total"]++;
+    if (isAssigned) {
+      organizedData["Assigned"]++;
     } else {
-      guardData["Unassigned"]++;
+      organizedData["Unassigned"]++;
     }
   });
 
-  return guardData;
+  return organizedData;
 };
 
-//incidents are analyzed to check for the total unsolved and solved incidents based on its category
 export const getIncidentStats = async () => {
-  const incidentDocs = await getDocs(collection(db, "incidents"));
+  const incidentData = await getCollectionData(INCIDENT_COLLECTION);
+  const historyData = await getCollectionData(HISTORY_COLLECTION);
   const incidentStats = {
-    solved: {},
-    unsolved: {},
+    solved: [],
+    unsolved: [],
   };
 
-  incidentDocs.forEach((incident) => {
-    const incidentType = incident.data().incidentType;
-    const completed = incident.data().completed;
+  incidentData.forEach((incident) => {
+    const incidentType = incident.incidentType;
+    const completed = incident.completed;
+
     if (completed) {
-      if (incidentStats.solved.hasOwnProperty(incidentType)) {
-        incidentStats.solved[incidentType]++;
+      const timeTaken = calculateTimeTaken(
+        incident.timeReported,
+        incident.timeCompleted
+      );
+
+      let solvedIndex = incidentStats.solved.findIndex(
+        (item) => item.incidentType === incidentType
+      );
+      if (solvedIndex !== -1) {
+        incidentStats.solved[solvedIndex].count++;
+        incidentStats.solved[solvedIndex].totalTime += timeTaken;
+        incidentStats.solved[solvedIndex].averageTime =
+          incidentStats.solved[solvedIndex].totalTime /
+          incidentStats.solved[solvedIndex].count;
       } else {
-        incidentStats.solved[incidentType] = 1;
+        incidentStats.solved.push({
+          incidentType,
+          count: 1,
+          totalTime: timeTaken,
+          averageTime: timeTaken,
+        });
       }
     } else {
-      if (incidentStats.unsolved.hasOwnProperty(incidentType)) {
-        incidentStats.unsolved[incidentType]++;
+      let unsolvedIndex = incidentStats.unsolved.findIndex(
+        (item) => item.incidentType === incidentType
+      );
+      if (unsolvedIndex !== -1) {
+        incidentStats.unsolved[unsolvedIndex].count++;
       } else {
-        incidentStats.unsolved[incidentType] = 1;
+        incidentStats.unsolved.push({ incidentType, count: 1 });
+      }
+    }
+  });
+
+  historyData.forEach((incident) => {
+    const incidentType = incident.incidentType;
+    const completed = incident.completed;
+
+    if (completed) {
+      const timeTaken = calculateTimeTaken(
+        incident.timeReported,
+        incident.timeCompleted
+      );
+
+      let solvedIndex = incidentStats.solved.findIndex(
+        (item) => item.incidentType === incidentType
+      );
+      if (solvedIndex !== -1) {
+        incidentStats.solved[solvedIndex].count++;
+        incidentStats.solved[solvedIndex].totalTime += timeTaken;
+        incidentStats.solved[solvedIndex].averageTime =
+          incidentStats.solved[solvedIndex].totalTime /
+          incidentStats.solved[solvedIndex].count;
+      } else {
+        incidentStats.solved.push({
+          incidentType,
+          count: 1,
+          totalTime: timeTaken,
+          averageTime: timeTaken,
+        });
+      }
+    } else {
+      let unsolvedIndex = incidentStats.unsolved.findIndex(
+        (item) => item.incidentType === incidentType
+      );
+      if (unsolvedIndex !== -1) {
+        incidentStats.unsolved[unsolvedIndex].count++;
+      } else {
+        incidentStats.unsolved.push({ incidentType, count: 1 });
       }
     }
   });
@@ -140,11 +169,18 @@ export const getIncidentStats = async () => {
   return incidentStats;
 };
 
-//incidents are analyzed to check for the total unsolved and solved incidents based on its category
-export const getAllIncidentInfo = async () => {
-  const incidentDocs = await getDocs(collection(db, "incidents"));
-  const historyDocs = await getDocs(collection(db, "history"));
+const calculateTimeTaken = (timeReported, timeCompleted) => {
+  const reportedTimestamp = new Date(timeReported).getTime();
+  const completedTimestamp = new Date(timeCompleted).getTime();
+  const timeDiff = completedTimestamp - reportedTimestamp;
 
+  // Convert time difference to days
+  return Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+};
+
+export const getAllIncidentInfo = async () => {
+  const incidentData = await getCollectionData(INCIDENT_COLLECTION);
+  const historyData = await getCollectionData(HISTORY_COLLECTION);
   const allIncidentInfo = {
     solved: 0,
     unsolved: 0,
@@ -152,16 +188,16 @@ export const getAllIncidentInfo = async () => {
     Total: 0,
   };
 
-  incidentDocs.forEach((incident) => {
+  incidentData.forEach((incident) => {
     allIncidentInfo["Total"]++;
-    if (incident.data().completed) {
+    if (incident.completed) {
       allIncidentInfo["solved"]++;
     } else {
       allIncidentInfo["unsolved"]++;
     }
   });
 
-  historyDocs.forEach((incident) => {
+  historyData.forEach((incident) => {
     allIncidentInfo["solved"]++;
     allIncidentInfo["archived"]++;
     allIncidentInfo["Total"]++;
@@ -170,13 +206,24 @@ export const getAllIncidentInfo = async () => {
   return allIncidentInfo;
 };
 
-//fetch incident data to count the unsolved and solved incidents
 export const fetchData = async () => {
-  const incidentDocs = await getDocs(doc(db, "incidents"));
-  const historyDocs = await getDocs(doc(db, "history"));
+  const incidentData = await getCollectionData(INCIDENT_COLLECTION);
+  const historyData = await getCollectionData(HISTORY_COLLECTION);
+  const incidentCategories = [
+    { category: "Theft or Burglary", count: 0 },
+    { category: "Vandalism", count: 0 },
+    { category: "Assault or Physical Altercation", count: 0 },
+    { category: "Harassment or Threats", count: 0 },
+    { category: "Property Damage", count: 0 },
+    { category: "Fire or Smoke Incident", count: 0 },
+    { category: "Medical Emergency", count: 0 },
+    { category: "Suspicious Activity or Persons", count: 0 },
+    { category: "Cybersecurity Breach", count: 0 },
+    { category: "Lost or Stolen Items", count: 0 },
+  ];
 
-  incidentDocs.forEach((incident) => {
-    const incidentType = incident.data().incidentType;
+  incidentData.forEach((incident) => {
+    const incidentType = incident.incidentType;
     const index = incidentCategories.findIndex(
       (item) => item.category === incidentType
     );
@@ -185,8 +232,8 @@ export const fetchData = async () => {
     }
   });
 
-  historyDocs.forEach((history) => {
-    const incidentType = history.data().incidentType;
+  historyData.forEach((incident) => {
+    const incidentType = incident.incidentType;
     const index = incidentCategories.findIndex(
       (item) => item.category === incidentType
     );
