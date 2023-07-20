@@ -317,7 +317,7 @@ const AccessPointList = () => {
       selectedGuards: [],
     });
 
-    setAlertText(`Deleting ${accesspoint.data().access}`);
+    setAlertText(`Deleting ${accesspoint.data().accessPointName}`);
     await deleteDoc(doc(db, "accessPoints", id));
   };
   return (

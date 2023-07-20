@@ -1,0 +1,7 @@
+{
+  "name": "securegate",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}

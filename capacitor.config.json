@@ -1,0 +1,11 @@
+{
+  "appId": "io.ionic.securegate",
+  "appName": "securegate",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "build",
+  "cordova": {},
+  "server": {
+    "androidScheme": "https"
+  }
+}

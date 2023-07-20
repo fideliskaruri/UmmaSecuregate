@@ -18,7 +18,7 @@
   grid-template-rows: repeat(auto-fit, minmax(0, 1fr));
   grid-gap: 10px;
   padding: 10px 0px 0px 0px;
-  height: 100%;
+  height: 100vh;
   width: 200px;
 }
 option {
@@ -72,7 +72,8 @@ option {
 }
 .dashboard {
   overflow: auto;
-  height: 1200px;
+  height: 85vh;
+  width: fit-content;
 }
 
 .dashboardContainer {
@@ -123,22 +124,19 @@ option {
 
 .generateReportsPage {
   overflow-y: scroll;
-  height: 90vh;
+  height: 85vh;
   padding-right: 10px;
 }
 
 .generateReportsPage::-webkit-scrollbar {
-  border-radius: 3px;
-  width: 10px;
-  color: black;
-  background-color: grey;
+  width: 0px;
 }
 
 @media (min-width: 200px) and (max-width: 720px) {
   .dashboardContainer {
-    display: flex;
+    display: gird;
     width: 100%;
-    flex-direction: column;
+    grid-template-columns: 1fr;
     grid-gap: 10px;
     padding: 0px;
     margin: 0px;
@@ -219,7 +217,6 @@ option {
   }
   .listarea {
     width: 100%;
-    padding-right: 5px;
   }
   button {
     width: 100%;
@@ -227,8 +224,7 @@ option {
 }
 
 .listarea::-webkit-scrollbar {
-  width: 10px;
-  background-color: grey;
+  width: 0px;
   /* Width of the scrollbar */
 }
 
@@ -238,7 +234,7 @@ option {
 
 .maincontent {
   padding: 30px 10px 0px 20px;
-  height: 100%;
+  height: 90vh;
   width: 100%;
 }
 
@@ -247,7 +243,7 @@ option {
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 5px;
   overflow-y: auto;
-  max-height: 85vh;
+  max-height: 90vh;
 }
 .historyPage {
   display: grid;
@@ -258,32 +254,38 @@ option {
 }
 .accessPointList {
   max-height: 80vh;
+  overflow-y: auto;
+}
+.accessPointList::-webkit-scrollbar {
+  width: 0px;
 }
 @media (max-width: 1020px) {
   .usersListArea {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     grid-gap: 5px;
     overflow-y: auto;
+    min-height: fit-content;
     max-height: 85vh;
   }
   .historyPage {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    max-height: 90vh;
+    max-height: 100%;
     grid-gap: 30px;
     overflow-y: auto;
   }
 }
 @media (max-width: 800px) {
   .usersListArea {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1;
     align-items: center;
     grid-gap: 5px;
     overflow-y: auto;
+    min-width: fit-content;
     max-height: 85vh;
-    max-width: 100%;
+    width: 100%;
   }
   /* button {
            width: 20%;
@@ -291,7 +293,7 @@ option {
   .historyPage {
     display: grid;
     grid-template-columns: 1fr;
-    max-height: 90vh;
+    max-height: 100%;
     grid-gap: 30px;
     overflow-y: auto;
   }
@@ -311,13 +313,13 @@ button {
   overflow-y: auto;
   overflow-x: hidden;
   height: fit-content;
-  min-height: fit-content;
-  max-height: 90vh;
+
+  padding: 0px;
+  margin: 0px;
 }
 
 .listarea::-webkit-scrollbar {
-  background-color: white;
-  width: 8px; /* Width of the scrollbar */
+  width: 0px; /* Width of the scrollbar */
 }
 
 .footer {
@@ -335,10 +337,7 @@ label {
 }
 
 .historyPage::-webkit-scrollbar {
-  width: 8px;
-}
-.historyPage::-webkit-scrollbar-thumb {
-  color: wheat;
+  width: 0px;
 }
 
 .loading-screen {
@@ -388,6 +387,4 @@ label {
   }
 }
 
-.dashboard {
-  height: 80vh;
-}
+

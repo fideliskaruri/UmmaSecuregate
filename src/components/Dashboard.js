@@ -68,10 +68,10 @@ const Dashboard = () => {
     setGuardData(data);
   };
   return (
-    <div className="listarea">
+    <div className="generateReportsPage">
       {currentUser ? (
         <>
-          <div className="dashboardContainer">
+          <div className="miniContainer">
             <InfoCard
               title={"Your Reported Incidents"}
               minWidth={"max-content"}
@@ -198,7 +198,7 @@ const Dashboard = () => {
               title={"Within the last week"}
               children={
                 <LineChart
-                  width={isMobile ? "200px" : "500px"}
+                  width={isMobile ? "300px" : "500px"}
                   data={{
                     labels: Object.keys(incidentData),
                     datasets: [

@@ -41,7 +41,7 @@ const MainContent = () => {
           checkAdmin().then((result) => setIsAdmin(result));
           setSignedIn(true);
         } else {
-          setSignedIn(false); 
+          setSignedIn(false);
         }
       } catch (error) {
         console.error(error);
@@ -136,10 +136,15 @@ const MainContent = () => {
                     )
                   }
                 />
-                <Route path="/dashboard" element={signedIn && <Dashboard />} />
+                <Route
+                  path="/dashboard"
+                  element={signedIn ? <Dashboard /> : <Navigate to={"?"} />}
+                />
                 <Route
                   path="/usermanagement"
-                  element={signedIn && <UserManagement />}
+                  element={
+                    signedIn ? <UserManagement /> : <Navigate to={"/"} />
+                  }
                 />
                 <Route
                   path="usermanagement/admin"
@@ -151,26 +156,37 @@ const MainContent = () => {
                     )
                   }
                 />
-                <Route path="/History" element={signedIn && <History />} />
+                <Route
+                  path="/History"
+                  element={signedIn ? <History /> : <Navigate to={"/"} />}
+                />
                 <Route
                   path="/accesslogs"
-                  element={signedIn && <AccessLogs />}
+                  element={signedIn ? <AccessLogs /> : <Navigate to={"/"} />}
                 />
                 <Route
                   path="/accesspoints"
-                  element={signedIn && <AccessPointList />}
+                  element={
+                    signedIn ? <AccessPointList /> : <Navigate to={"/"} />
+                  }
                 />
                 <Route
                   path="/generatereports"
-                  element={signedIn && <GenerateReports />}
+                  element={
+                    signedIn ? <GenerateReports /> : <Navigate to={"/"} />
+                  }
                 />
                 <Route
                   path="/helpandsupport"
-                  element={signedIn && <HelpAndSupport />}
+                  element={
+                    signedIn ? <HelpAndSupport /> : <Navigate to={"/"} />
+                  }
                 />
                 <Route
                   path="/securityincidents"
-                  element={signedIn && <SecurityIncidents />}
+                  element={
+                    signedIn ? <SecurityIncidents /> : <Navigate to={"/"} />
+                  }
                 />
               </Routes>
             </div>
