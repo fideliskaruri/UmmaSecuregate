@@ -16,11 +16,30 @@ const HISTORY_COLLECTION = "history";
 
 export const getIncidentData = async () => {
   const incidentData = await getCollectionData(INCIDENT_COLLECTION);
+  const historyData = await getCollectionData(HISTORY_COLLECTION);
+
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
   const organizedData = {};
   incidentData.forEach((incident) => {
+    const incidentDate = new Date(incident.timeReported);
+    if (incidentDate >= oneWeekAgo) {
+      const date = incidentDate.toLocaleDateString("en-US", {
+        weekday: "short",
+      });
+      if (organizedData.hasOwnProperty(date)) {
+        organizedData[date].count++;
+        organizedData[date].incidents.push(incident);
+      } else {
+        organizedData[date] = {
+          count: 1,
+          incidents: [incident],
+        };
+      }
+    }
+  });
+  historyData.forEach((incident) => {
     const incidentDate = new Date(incident.timeReported);
     if (incidentDate >= oneWeekAgo) {
       const date = incidentDate.toLocaleDateString("en-US", {
@@ -219,7 +238,6 @@ export const fetchData = async () => {
     { category: "Medical Emergency", count: 0 },
     { category: "Suspicious Activity or Persons", count: 0 },
     { category: "Cybersecurity Breach", count: 0 },
-    { category: "Lost or Stolen Items", count: 0 },
   ];
 
   incidentData.forEach((incident) => {

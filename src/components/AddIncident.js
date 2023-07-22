@@ -138,7 +138,6 @@ const AddIncident = ({ onAdd }) => {
             Suspicious Activity or Persons
           </option>
           <option value="Cybersecurity Breach">Cybersecurity Breach</option>
-          <option value="Lost or Stolen Items">Lost or Stolen Items</option>
           {/* Add more incident types as needed */}
         </select>
       </div>

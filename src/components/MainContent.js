@@ -3,8 +3,10 @@ import {
   Route,
   Routes,
   Navigate,
+  redirect,
 } from "react-router-dom";
 import { CiMenuFries } from "react-icons/ci";
+import { IoCloseOutline } from "react-icons/io5";
 import "../App.css";
 import Sidebar from "./Sidebar";
 import Dashboard from "./Dashboard";
@@ -29,7 +31,6 @@ const MainContent = () => {
   const [show, setShow] = useState(false);
 
   const { user, checkAdmin } = UserAuth();
-
   useEffect(() => {
     // Check if the user is authenticated
     const checkUser = async () => {
@@ -102,24 +103,18 @@ const MainContent = () => {
           >
             {signedIn && (
               <div
-                className=" btn btn-sm btn-dark border rounded hidebtn"
+                className="d-flex justify-content-center align-items-center border rounded btn btn-sm mr-3"
                 style={{
                   position: "absolute",
                   top: "0px",
                   zIndex: 1000,
                   marginTop: "10px",
-                  // width: "35px",
-                  // height:"30px"
-                  // backgroundColor:"red",
+                  width: "30px",
+                  height: "30px",
                 }}
                 onClickCapture={() => setShow(!show)}
               >
-                <CiMenuFries />
-                {/* <Button
-                  text={<CiMenuFries />}
-                  onClick={() => setShow(!show)}
-                  color={"outline-secondary"}
-                /> */}
+                {show ? <IoCloseOutline /> : <CiMenuFries />}
               </div>
             )}
             <div className="mt-3">

@@ -6,9 +6,10 @@ const IncidentTask = ({
   incident,
   onToggle,
   text,
+  EditText,
   color,
   onDelete,
-  printUser,
+  onEdit,
 }) => {
   const [visible, setVisible] = useState(false);
   const { user } = UserAuth();
@@ -23,7 +24,6 @@ const IncidentTask = ({
       <div
         className={`card border-${color} text-bg-dark p-0 mb-3 w-100`}
         style={{ maxHeight: "250px" }}
-        onDoubleClick={printUser}
       >
         <div className={`card-header border-${color} text-capitalize`}>
           {incident.date}
@@ -34,6 +34,7 @@ const IncidentTask = ({
         </div>
         {visible && (
           <div className="card-body">
+            <Button onClick={onEdit} color={`${color}`} text={EditText} />
             <Button onClick={onToggle} color={`${color}`} text={text} />
             <Button onClick={onDelete} color="outline-danger" text="Delete" />
           </div>

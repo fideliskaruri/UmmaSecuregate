@@ -13,9 +13,16 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
+import DangerAlert from "./DangerAlert";
 
 const IncidentList = () => {
   const [incidentList, setIncidentList] = useState([]);
+  const [incidentDescription, setIncidentDescription] = useState("");
+  const [incidentId, setIncidentId] = useState("");
+  const [incidentEditor, setShowIncidentEditor] = useState(false);
+  const [danger, setDanger] = useState(false);
+
+  //collection ref
   const incidentCollectionRef = collection(db, "incidents");
 
   //current time
@@ -89,38 +96,89 @@ const IncidentList = () => {
     }
     await deleteDoc(doc(db, "incidents", customId));
   };
+
+  const toggleEdit = (incident) => {
+    setShowIncidentEditor(true);
+    setIncidentId(incident.id);
+    setIncidentDescription(incident.incidentDescription);
+  };
+  const updateIncidentDescription = async (e) => {
+    e.preventDefault();
+    if (incidentDescription.length > 50) {
+      await updateDoc(doc(db, "incidents", incidentId), {
+        incidentDescription: incidentDescription,
+      });
+
+      setShowIncidentEditor(false);
+    } else {
+      setDanger(true);
+    }
+  };
   return (
-    <div className="mainContainer">
-      <div className="listarea">
-        {incidentList.map((incident) =>
-          incident.completed ? null : (
-            <IncidentTask
-              key={incident.id}
-              incident={incident}
-              text="Mark Solved"
-              color="light"
-              onToggle={() => setIncidentSolved(incident)}
-              onDelete={() => toggleDeleteUnsolvedIncident(incident)}
-              printUser={() => console.log(incident.user)}
-            />
-          )
-        )}
-      </div>
-      <div className="listarea">
-        {incidentList.map(
-          (incident) =>
-            incident.completed && (
-              <IncidentTask
-                text={"Solved"}
-                color={"success"}
-                key={incident.id}
-                incident={incident}
-                onDelete={() => toggleDelete(incident)}
-              />
-            )
-        )}
-      </div>
-    </div>
+    <>
+      {danger && (
+        <DangerAlert
+          text={"Description requires a minimum of 50 characters."}
+          color={"Danger"}
+          timeAlert={setDanger}
+        />
+      )}
+
+      {incidentEditor ? (
+        <form className="" onSubmit={(e) => updateIncidentDescription(e)}>
+          <label htmlFor="">Update Incident Description</label>
+          <textarea
+            rows={"6"}
+            className="form-control mb-3 "
+            type="text"
+            value={incidentDescription}
+            placeholder="Describe the incident"
+            onChange={(e) => setIncidentDescription(e.target.value)}
+          />
+          <input
+            className="btn btn-outline-primary"
+            type="submit"
+            value={"Save"}
+          />
+        </form>
+      ) : (
+        <div className="mainContainer">
+          <div className="listarea">
+            {incidentList.map((incident) =>
+              incident.completed ? null : (
+                <IncidentTask
+                  key={incident.id}
+                  incident={incident}
+                  text="Mark Solved"
+                  EditText={"Edit"}
+                  onEdit={() => toggleEdit(incident)}
+                  color="light"
+                  onToggle={() => setIncidentSolved(incident)}
+                  onDelete={() => toggleDeleteUnsolvedIncident(incident)}
+                  printUser={() => console.log(incident.user)}
+                />
+              )
+            )}
+          </div>
+          <div className="listarea">
+            {incidentList.map(
+              (incident) =>
+                incident.completed && (
+                  <IncidentTask
+                    text={"Solved"}
+                    color={"success"}
+                    key={incident.id}
+                    incident={incident}
+                    onDelete={() => toggleDelete(incident)}
+                    EditText={"Edit"}
+                    onEdit={() => toggleEdit(incident)}
+                  />
+                )
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
