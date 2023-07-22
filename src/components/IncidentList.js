@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import DangerAlert from "./DangerAlert";
+import { isMobile } from "mobile-device-detect";
 
 const IncidentList = () => {
   const [incidentList, setIncidentList] = useState([]);
@@ -128,7 +129,7 @@ const IncidentList = () => {
         <form className="" onSubmit={(e) => updateIncidentDescription(e)}>
           <label htmlFor="">Update Incident Description</label>
           <textarea
-            rows={"6"}
+            rows={isMobile ? "10" : "6"}
             className="form-control mb-3 "
             type="text"
             value={incidentDescription}
