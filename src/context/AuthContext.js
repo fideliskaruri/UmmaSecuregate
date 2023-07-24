@@ -29,6 +29,7 @@ export const AuthContextProvider = ({ children }) => {
   const [alertText, setAlertText] = useState("");
   const [alertColor, setAlertColor] = useState("");
   const [show, setShow] = useState(true);
+  const [userRegistered, setUserRegistered] = useState(false);
 
   const [signedIn, setSignedIn] = useState(true);
   const [user, setUser] = useState();
@@ -136,7 +137,7 @@ export const AuthContextProvider = ({ children }) => {
     if (file) {
       // Upload the file to storage
       await uploadBytes(storageRef, file).then(() => {
-        console.log("Image uploaded");
+        setUserRegistered(true);
       });
     }
 
@@ -244,6 +245,8 @@ export const AuthContextProvider = ({ children }) => {
     alertColor,
     alertText,
     currentTime,
+    setUserRegistered,
+    userRegistered,
   };
 
   return (

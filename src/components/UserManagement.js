@@ -12,10 +12,12 @@ import Button from "./Button";
 import { UserAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { IoMdArrowDropdownCircle } from "react-icons/io";
+import DangerAlert from "./DangerAlert";
 
 const UserManagement = () => {
   const [userList, setUserList] = useState([]);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [show, setShow] = useState(false);
   //list states
   const [showGuards, setShowGuards] = useState(false);
   const [showAdmins, setShowAdmins] = useState(false);
@@ -36,9 +38,19 @@ const UserManagement = () => {
     refreshData();
   }, []);
 
+  const deleteUser = async (id) => {
+    setShow(true);
+    await deleteDoc(doc(db, "users", id));
+  };
   return (
     <>
-    
+      {show && (
+        <DangerAlert
+          text={"Deleting User"}
+          color={"danger"}
+          timeAlert={setShow}
+        />
+      )}
       {isAdmin && (
         <Button
           text={"Add User"}
@@ -69,7 +81,11 @@ const UserManagement = () => {
               userList.map(
                 (user) =>
                   user.role === "Admin" && (
-                    <UserCard key={user.id} user={user} />
+                    <UserCard
+                      key={user.id}
+                      userCard={user}
+                      deleteUser={() => deleteUser(user.id)}
+                    />
                   )
               )}
           </li>
@@ -97,7 +113,11 @@ const UserManagement = () => {
               userList.map(
                 (user) =>
                   user.role === "Supervisor" && (
-                    <UserCard key={user.id} user={user} />
+                    <UserCard
+                      key={user.id}
+                      userCard={user}
+                      deleteUser={() => deleteUser(user.id)}
+                    />
                   )
               )}
           </li>
@@ -123,7 +143,11 @@ const UserManagement = () => {
               userList.map(
                 (user) =>
                   user.role === "Guard" && (
-                    <UserCard key={user.id} user={user} />
+                    <UserCard
+                      key={user.id}
+                      userCard={user}
+                      deleteUser={() => deleteUser(user.id)}
+                    />
                   )
               )}
           </li>

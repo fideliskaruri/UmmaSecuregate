@@ -80,6 +80,7 @@ export const getUserData = async () => {
 
 export const getGuardData = async () => {
   const guardData = await getCollectionData("users");
+
   const organizedData = {
     Total: 0,
     Assigned: 0,
@@ -87,12 +88,14 @@ export const getGuardData = async () => {
   };
 
   guardData.forEach((user) => {
-    const isAssigned = user.assigned;
-    organizedData["Total"]++;
-    if (isAssigned) {
-      organizedData["Assigned"]++;
-    } else {
-      organizedData["Unassigned"]++;
+    if (user.role === "Guard") {
+      const isAssigned = user.assigned;
+      organizedData["Total"]++;
+      if (isAssigned) {
+        organizedData["Assigned"]++;
+      } else {
+        organizedData["Unassigned"]++;
+      }
     }
   });
 

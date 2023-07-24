@@ -20,7 +20,8 @@ const Admin = () => {
   const [alertColor, setAlertColor] = useState("");
   const [showAlert, setShowAlert] = useState(true);
 
-  const { createUser, emailInUse, setEmailInUse } = UserAuth();
+  const { createUser, emailInUse, userRegistered, setUserRegistered } =
+    UserAuth();
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -52,6 +53,12 @@ const Admin = () => {
           setAlertText("Email is already in use!");
           return;
         } else {
+          if (userRegistered) {
+            setShowAlert(true);
+            setAlertColor("success");
+            setAlertText("User Registered Successfully.");
+            setUserRegistered(false);
+          }
           setFirstName("");
           setLastName("");
           setEmail("");

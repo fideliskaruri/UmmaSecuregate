@@ -51,7 +51,7 @@ const AddIncident = ({ onAdd }) => {
           user: userId,
         });
 
-        // //update the reported incidents array
+        //update the reported incidents array
         await setDoc(
           doc(db, "users", userId),
           {
